@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Calendar, MapPin, Users, Trophy, Clock, Phone, Mail, ArrowRight } from 'lucide-react';
+import { useAdminAuth } from '../hooks/useAdminAuth';
 
 function LandingPage() {
   const [scrollY, setScrollY] = useState(0);
   const navigate = useNavigate();
+  const { admin } = useAdminAuth();
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
@@ -14,6 +16,16 @@ function LandingPage() {
 
   const handleRegisterClick = () => {
     navigate('/register');
+  };
+
+  const handleAdminClick = () => {
+    if (admin) {
+      // Jika sudah login sebagai admin, langsung ke dashboard
+      navigate('/admin/dashboard');
+    } else {
+      // Jika belum login, ke halaman login admin
+      navigate('/admin/login');
+    }
   };
 
   return (
@@ -45,10 +57,10 @@ function LandingPage() {
                 REGISTER
               </button>
               <button 
-                onClick={() => navigate('/admin/login')}
+                onClick={handleAdminClick}
                 className="border border-gray-400 text-gray-600 px-6 py-3 text-xs font-light tracking-wide hover:border-gray-600 hover:text-black transition-colors"
               >
-                ADMIN
+                {admin ? 'ADMIN DASHBOARD' : 'ADMIN'}
               </button>
             </div>
           </div>
