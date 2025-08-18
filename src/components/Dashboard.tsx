@@ -16,6 +16,7 @@ function Dashboard() {
   const [selectedTicket, setSelectedTicket] = useState<string>('');
 
   const { registrationSuccess } = location.state || {};
+  const { paymentPending } = location.state || {};
 
   useEffect(() => {
     if (user) {
@@ -118,15 +119,18 @@ function Dashboard() {
       <div className="max-w-6xl mx-auto px-8 py-16">
         {/* Success Message */}
         {registrationSuccess && (
-          <div className="bg-green-50 border border-green-200 rounded-lg p-8 mb-12 text-center">
-            <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Check className="w-8 h-8 text-white" />
+          <div className={`${paymentPending ? 'bg-yellow-50 border-yellow-200' : 'bg-green-50 border-green-200'} border rounded-lg p-8 mb-12 text-center`}>
+            <div className={`w-16 h-16 ${paymentPending ? 'bg-yellow-600' : 'bg-green-600'} rounded-full flex items-center justify-center mx-auto mb-4`}>
+              {paymentPending ? <Clock className="w-8 h-8 text-white" /> : <Check className="w-8 h-8 text-white" />}
             </div>
             <h1 className="text-3xl font-light tracking-tight text-black mb-4">
-              Registrasi Berhasil!
+              {paymentPending ? 'Registrasi Berhasil - Menunggu Pembayaran' : 'Registrasi Berhasil!'}
             </h1>
             <p className="text-lg font-light text-gray-700">
-              Selamat! Anda telah berhasil mendaftar untuk KORPRI RUN 2025
+              {paymentPending 
+                ? 'Registrasi Anda berhasil dibuat. Silakan selesaikan pembayaran untuk mengaktifkan tiket.'
+                : 'Selamat! Anda telah berhasil mendaftar untuk KORPRI RUN 2025'
+              }
             </p>
           </div>
         )}

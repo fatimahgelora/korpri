@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, Check, User, CreditCard, QrCode, Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { supabase } from '../lib/supabase';
+import { createMidtransTransaction, getTicketTypeName, MIDTRANS_CONFIG } from '../lib/midtrans';
 
 interface FormData {
   userType: 'ASN' | 'Umum' | '';
@@ -34,10 +35,11 @@ function RegistrationWizard() {
     kabKota: ''
   });
   const [showPassword, setShowPassword] = useState(false);
-  const [showQRIS, setShowQRIS] = useState(false);
+  const [showPayment, setShowPayment] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [hasAccount, setHasAccount] = useState(false);
+  const [snapToken, setSnapToken] = useState<string>('');
 
   const steps = [
     { number: 1, title: 'Pilih Tipe', icon: User },
@@ -127,7 +129,7 @@ function RegistrationWizard() {
     }
 
     setLoading(true);
-    setShowQRIS(true);
+    setShowPayment(true);
     setError('');
 
     try {
@@ -145,9 +147,6 @@ function RegistrationWizard() {
         return;
       }
 
-      // Simulate payment processing
-      await new Promise(resolve => setTimeout(resolve, 3000));
-
       // Save registration to database
       const { data, error: insertError } = await supabase
         .from('registrations')
@@ -161,7 +160,7 @@ function RegistrationWizard() {
           jenis_tiket: formData.jenisTicket,
           kab_kota: formData.kabKota,
           ticket_price: getTicketPrice(),
-          payment_status: 'completed'
+          payment_status: 'pending'
         })
         .select()
         .single();
@@ -170,18 +169,74 @@ function RegistrationWizard() {
         throw insertError;
       }
 
-      // Navigate to dashboard with success
-      navigate('/dashboard', { 
-        state: { 
-          registrationSuccess: true,
-          registrationData: data
-        }
-      });
+      // Create Midtrans transaction
+      const transactionData = {
+        transaction_details: {
+          order_id: data.id,
+          gross_amount: getTicketPrice()
+        },
+        customer_details: {
+          first_name: formData.nama,
+          email: formData.email,
+          phone: formData.nomerHp
+        },
+        item_details: [{
+          id: formData.jenisTicket,
+          price: getTicketPrice(),
+          quantity: 1,
+          name: `KORPRI RUN 2025 - ${getTicketTypeName(formData.jenisTicket)}`
+        }]
+      };
+
+      const midtransResponse = await createMidtransTransaction(transactionData);
+      setSnapToken(midtransResponse.token);
+
+      // Load Midtrans Snap script
+      const script = document.createElement('script');
+      script.src = MIDTRANS_CONFIG.isProduction 
+        ? 'https://app.midtrans.com/snap/snap.js' 
+        : 'https://app.sandbox.midtrans.com/snap/snap.js';
+      script.setAttribute('data-client-key', MIDTRANS_CONFIG.clientKey);
+      document.head.appendChild(script);
+
+      script.onload = () => {
+        // @ts-ignore
+        window.snap.pay(midtransResponse.token, {
+          onSuccess: function(result: any) {
+            console.log('Payment success:', result);
+            navigate('/dashboard', { 
+              state: { 
+                registrationSuccess: true,
+                registrationData: data
+              }
+            });
+          },
+          onPending: function(result: any) {
+            console.log('Payment pending:', result);
+            navigate('/dashboard', { 
+              state: { 
+                registrationSuccess: true,
+                registrationData: data,
+                paymentPending: true
+              }
+            });
+          },
+          onError: function(result: any) {
+            console.log('Payment error:', result);
+            setError('Pembayaran gagal. Silakan coba lagi.');
+            setShowPayment(false);
+          },
+          onClose: function() {
+            console.log('Payment popup closed');
+            setShowPayment(false);
+          }
+        });
+      };
 
     } catch (err: any) {
       console.error('Registration error:', err);
       setError(err.message || 'Terjadi kesalahan saat mendaftar');
-      setShowQRIS(false);
+      setShowPayment(false);
     }
     
     setLoading(false);
@@ -517,7 +572,7 @@ function RegistrationWizard() {
                 <div className="w-16 h-px bg-red-600 mx-auto"></div>
               </div>
 
-              {!showQRIS ? (
+              {!showPayment ? (
                 <div className="max-w-md mx-auto">
                   <div className="bg-gray-50 p-8 rounded-lg mb-8">
                     <h3 className="text-xl font-light text-black mb-6">Ringkasan Pesanan</h3>
@@ -553,22 +608,22 @@ function RegistrationWizard() {
                     }`}
                   >
                     <QrCode className="w-5 h-5 mr-2" />
-                    {loading ? 'MEMPROSES...' : 'BAYAR DENGAN QRIS'}
+                    {loading ? 'MEMPROSES...' : 'BAYAR SEKARANG'}
                   </button>
                 </div>
               ) : (
                 <div className="max-w-md mx-auto text-center">
-                  <div className="bg-white border-2 border-gray-200 p-8 rounded-lg">
-                    <QrCode className="w-32 h-32 mx-auto text-gray-400 mb-4" />
-                    <h3 className="text-xl font-light text-black mb-2">Scan QR Code</h3>
+                  <div className="bg-blue-50 border-2 border-blue-200 p-8 rounded-lg">
+                    <CreditCard className="w-32 h-32 mx-auto text-blue-400 mb-4" />
+                    <h3 className="text-xl font-light text-black mb-2">Memproses Pembayaran</h3>
                     <p className="text-gray-600 mb-4">
-                      Gunakan aplikasi mobile banking atau e-wallet untuk scan QR code
+                      Silakan selesaikan pembayaran di jendela yang terbuka
                     </p>
                     <div className="text-2xl font-light text-red-600 mb-4">
                       {formatPrice(getTicketPrice())}
                     </div>
                     <div className="text-sm text-gray-500">
-                      {loading ? 'Memproses pembayaran...' : 'Pembayaran berhasil!'}
+                      Jendela pembayaran akan terbuka secara otomatis
                     </div>
                   </div>
                 </div>
@@ -577,7 +632,7 @@ function RegistrationWizard() {
           )}
 
           {/* Navigation Buttons */}
-          {!showQRIS && (
+          {!showPayment && (
             <div className="flex justify-between pt-12 border-t border-gray-200">
               <button
                 onClick={handleBack}
