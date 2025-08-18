@@ -74,14 +74,47 @@ const MarathonLanding: React.FC = () => {
     return () => clearInterval(timer);
   }, []);
 
-  // Inisialisasi Slick Slider untuk sponsor & news
+  // Inisialisasi Slick Slider & animasi untuk hero, sponsor, news
   useEffect(() => {
     const interval = setInterval(() => {
       const $ = (window as any).$;
-      if ($ && $.fn) {
+      const Parallax = (window as any).Parallax;
+      if ($ && $.fn && $.fn.slick) {
+        // Hero Slider (.marathon-slider)
+        if ($('.marathon-slider').length && !$('.marathon-slider').hasClass('slick-initialized')) {
+          $('.marathon-slider').slick({
+            infinite: true,
+            slidesToShow: 1,
+            slidesToScroll: 1,
+            dots: true,
+            arrows: false,
+            speed: 1000,
+            fade: true,
+            cssEase: 'cubic-bezier(0.7, 0, 0.3, 1)',
+            touchThreshold: 100,
+            autoplay: true,
+            autoplaySpeed: 4500,
+            lazyLoad: 'progressive',
+            draggable: true,
+            responsive: [
+              {
+                breakpoint: 1200,
+                settings: { dots: false }
+              }
+            ]
+          });
+        }
+        // Parallax animasi gambar marathon
+        if (Parallax && $('.scene').length && !$('.scene').data('parallax-initialized')) {
+          $('.scene').each(function (_: any, el: any) {
+            new Parallax(el);
+            $(el).data('parallax-initialized', true);
+          });
+        }
         // Slick Sponsor
-        if ($.fn.slick && $('.clients-cover').length && !$('.clients-cover').hasClass('slick-initialized')) {
+        if ($('.clients-cover').length && !$('.clients-cover').hasClass('slick-initialized')) {
           $('.clients-cover').slick({
+            infinite: true,
             slidesToShow: 5,
             slidesToScroll: 1,
             autoplay: true,
@@ -96,16 +129,23 @@ const MarathonLanding: React.FC = () => {
           });
         }
         // Slick News
-        if ($.fn.slick && $('.marathon-news-slider').length && !$('.marathon-news-slider').hasClass('slick-initialized')) {
+        if ($('.marathon-news-slider').length && !$('.marathon-news-slider').hasClass('slick-initialized')) {
           $('.marathon-news-slider').slick({
             slidesToShow: 4,
             slidesToScroll: 1,
             arrows: true,
+            speed: 800,
+            touchThreshold: 200,
+            cssEase: 'ease',
+            nextArrow: '<span class="slick-arrow-next"><i class="fa fa-angle-right" aria-hidden="true"></i></span>',
+            prevArrow: '<span class="slick-arrow-prev"><i class="fa fa-angle-left" aria-hidden="true"></i></span>',
+            autoplay: true,
+            autoplaySpeed: 4500,
             dots: false,
             responsive: [
               { breakpoint: 1200, settings: { slidesToShow: 3 } },
               { breakpoint: 768, settings: { slidesToShow: 2 } },
-              { breakpoint: 480, settings: { slidesToShow: 1 } }
+              { breakpoint: 576, settings: { fade: true, slidesToShow: 1 } }
             ]
           });
         }
@@ -141,28 +181,28 @@ const MarathonLanding: React.FC = () => {
       time: '9:00 - 11:00',
       title: 'Excepteur sint occaecat cupidatat',
       description: 'At vero eos et accusamus et iusto odio dignissimos ducimus blanditiis praesentium volup',
-      icon: '/assets/img/event-icon-1.svg'
+      icon: '/img/event-icon-1.svg'
     },
     {
       id: '2',
       time: '11:00 - 13:00',
       title: 'Sed ut perspiciatis unde omnis',
       description: 'At vero eos et accusamus et iusto odio dignissimos ducimus blanditiis praesentium volup',
-      icon: '/assets/img/event-icon-2.svg'
+      icon: '/img/event-icon-2.svg'
     },
     {
       id: '3',
       time: '13:00 - 14:00',
       title: 'Ut enim ad minima veniam, quis',
       description: 'At vero eos et accusamus et iusto odio dignissimos ducimus blanditiis praesentium volup',
-      icon: '/assets/img/event-icon-3.svg'
+      icon: '/img/event-icon-3.svg'
     },
     {
       id: '4',
       time: '14:00 - 15:00',
       title: 'Quis autem vel eum iure reprehend',
       description: 'At vero eos et accusamus et iusto odio dignissimos ducimus blanditiis praesentium volup',
-      icon: '/assets/img/event-icon-4.svg'
+      icon: '/img/event-icon-4.svg'
     }
   ];
 
@@ -173,7 +213,7 @@ const MarathonLanding: React.FC = () => {
       date: '10, 2020',
       month: 'March',
       content: 'Сonsectetur adipiscing elit, sed do eiusmod tempor',
-      thumbnail: '/assets/img/post-1-home-1.jpg',
+      thumbnail: '/img/post-1-home-1.jpg',
       comments: 0
     },
     {
@@ -182,7 +222,7 @@ const MarathonLanding: React.FC = () => {
       date: '15, 2020',
       month: 'April',
       content: 'Many desktop publishing packages and web page',
-      thumbnail: '/assets/img/post-2-home-1.jpg',
+      thumbnail: '/img/post-2-home-1.jpg',
       comments: 0
     },
     {
@@ -191,7 +231,7 @@ const MarathonLanding: React.FC = () => {
       date: '25, 2020',
       month: 'June',
       content: 'Various versions have evolved over the years',
-      thumbnail: '/assets/img/post-3-home-1.jpg',
+      thumbnail: '/img/post-3-home-1.jpg',
       comments: 0
     }
   ];
@@ -227,7 +267,7 @@ const MarathonLanding: React.FC = () => {
       </div>
 
       {/* Background Effect */}
-      <span className="bg-effect" style={{backgroundImage: 'url(./assets/img/main-bg.svg)'}}></span>
+      <span className="bg-effect" style={{backgroundImage: 'url(./img/main-bg.svg)'}}></span>
 
       {/* Header */}
       <header className="marathon-header-fixed header-fixed">
@@ -239,7 +279,7 @@ const MarathonLanding: React.FC = () => {
         <div className="top-panel">
           <div className="container">
             <a href="/" className="logo">
-              <img src="/assets/img/logo-white.svg" alt="logo" />
+              <img src="/img/logo-white.svg" alt="logo" />
             </a>
             <ul className="social-list">
               <li><a target="_blank" href="https://www.facebook.com/rovadex"><i className="fab fa-facebook-f"></i></a></li>
@@ -290,10 +330,10 @@ const MarathonLanding: React.FC = () => {
           <div className="marathon-slide marathon-slide-1">
             <div className="scene">
               <div className="scene-item">
-                <span className="marathon-effect" style={{backgroundImage: 'url(/assets/img/effect-slider-marathon.svg)'}}></span>
+                <span className="marathon-effect" style={{backgroundImage: 'url(/img/effect-slider-marathon.svg)'}}></span>
               </div>
               <div className="scene-item">
-                <img className="marathon-img" src="/assets/img/slider-1.png" alt="runner" />
+                <img className="marathon-img" src="/img/slider-1.png" alt="runner" />
               </div>
               <div className="scene-item">
                 <div className="slider-location">
@@ -309,27 +349,27 @@ const MarathonLanding: React.FC = () => {
             </div>
           </div>
         </div>
-        <img className="marathon-slider-shape" src="/assets/img/slider-home1-shape.svg" alt="shape" />
+        <img className="marathon-slider-shape" src="/img/slider-home1-shape.svg" alt="shape" />
         
         {/* Countdown Timer */}
         <div id="clockdiv" className="clock-timer clock-timer-marathon">
           <div className="days-item">
-            <img src="/assets/img/counter-1.svg" alt="days" />
+            <img src="/img/counter-1.svg" alt="days" />
             <span className="days">{countdown.days}</span>
             <div className="smalltext">Days</div>
           </div>
           <div className="hours-item">
-            <img src="/assets/img/counter-2.svg" alt="hours" />
+            <img src="/img/counter-2.svg" alt="hours" />
             <span className="hours">{countdown.hours}</span>
             <div className="smalltext">Hours</div>
           </div>
           <div className="minutes-item">
-            <img src="/assets/img/counter-3.svg" alt="minutes" />
+            <img src="/img/counter-3.svg" alt="minutes" />
             <span className="minutes">{countdown.minutes}</span>
             <div className="smalltext">Minutes</div>
           </div>
           <div className="seconds-item">
-            <img src="/assets/img/counter-4.svg" alt="seconds" />
+            <img src="/img/counter-4.svg" alt="seconds" />
             <span className="seconds">{countdown.seconds}</span>
             <div className="smalltext">Seconds</div>
           </div>
@@ -339,14 +379,14 @@ const MarathonLanding: React.FC = () => {
       {/* About Section */}
       <section id="about" className="s-our-mission">
         <div className="container">
-          <img className="mission-effect" src="/assets/img/our-mission-5.svg" alt="effect" />
+          <img className="mission-effect" src="/img/our-mission-5.svg" alt="effect" />
           <h2 className="title">Our mission</h2>
           <div className="row">
             <div className="col-lg-6 our-mission-img">
               <span>
-                <img className="mission-img-effect-1" src="/assets/img/our-mission-2.svg" alt="effect" />
-                <img className="mission-img" src="/assets/img/our-mission.jpg" alt="mission" />
-                <img className="mission-img-effect-4" src="/assets/img/tringle-gray-little.svg" alt="effect" />
+                <img className="mission-img-effect-1" src="/img/our-mission-2.svg" alt="effect" />
+                <img className="mission-img" src="/img/our-mission.jpg" alt="mission" />
+                <img className="mission-img-effect-4" src="/img/tringle-gray-little.svg" alt="effect" />
               </span>
             </div>
             <div className="col-lg-6 our-mission-info">
@@ -372,27 +412,27 @@ const MarathonLanding: React.FC = () => {
       </section>
 
       {/* Choose Us */}
-      <section className="s-choose-us" style={{backgroundImage: 'url(/assets/img/bg-1.svg)'}}>
+      <section className="s-choose-us" style={{backgroundImage: 'url(/img/bg-1.svg)'}}>
         <div className="container">
           <h2 className="title"><span>Reasons to run with us!</span></h2>
           <div className="row">
             <div className="col-sm-6 col-md-6 col-lg-3 choose-us-item">
-              <img src="/assets/img/icon-1.svg" alt="quick registration" />
+              <img src="/img/icon-1.svg" alt="quick registration" />
               <h4>Quick registration</h4>
               <p>Lorem ipsum dolor sit amet, consectetur adipiscing</p>
             </div>
             <div className="col-sm-6 col-md-6 col-lg-3 choose-us-item">
-              <img src="/assets/img/icon-2.svg" alt="delivery" />
+              <img src="/img/icon-2.svg" alt="delivery" />
               <h4>Delivery to the venue</h4>
               <p>Voluptatibus molestiae aperiam ducimus, architecto</p>
             </div>
             <div className="col-sm-6 col-md-6 col-lg-3 choose-us-item">
-              <img src="/assets/img/icon-3.svg" alt="water" />
+              <img src="/img/icon-3.svg" alt="water" />
               <h4>Water for participants</h4>
               <p>cumque odio dolorum expedita ea illo sit laboriosam</p>
             </div>
             <div className="col-sm-6 col-md-6 col-lg-3 choose-us-item">
-              <img src="/assets/img/icon-4.svg" alt="medical" />
+              <img src="/img/icon-4.svg" alt="medical" />
               <h4>Medical staff</h4>
               <p>Consectetur adipiscing elit, sed eiusmod tempor</p>
             </div>
@@ -404,8 +444,8 @@ const MarathonLanding: React.FC = () => {
       <section id="schedule" className="s-event-schedule">
         <div className="container">
           <h2 className="title"><span>Event schedule</span></h2>
-          <img className="schedule-effect-white" src="/assets/img/tringle-white.svg" alt="effect" />
-          <img className="schedule-effect-yellow" src="/assets/img/tringle-yellow-little.svg" alt="effect" />
+          <img className="schedule-effect-white" src="/img/tringle-white.svg" alt="effect" />
+          <img className="schedule-effect-yellow" src="/img/tringle-yellow-little.svg" alt="effect" />
           <div className="row">
             <div className="col-xl-6">
               <div className="event-schedule-tabs">
@@ -427,9 +467,9 @@ const MarathonLanding: React.FC = () => {
             </div>
             <div className="col-md-6 event-schedule-img">
               <div className="schedule-img-wrap">
-                <img className="schedule-effect-tringle" src="/assets/img/tringle-gray-little.svg" alt="effect" />
-                <img className="schedule-img-effect" src="/assets/img/our-mission-2.svg" alt="effect" />
-                <img className="schedule-img" src="/assets/img/event-schedule.jpg" alt="event schedule" />
+                <img className="schedule-effect-tringle" src="/img/tringle-gray-little.svg" alt="effect" />
+                <img className="schedule-img-effect" src="/img/our-mission-2.svg" alt="effect" />
+                <img className="schedule-img" src="/img/event-schedule.jpg" alt="event schedule" />
               </div>
             </div>
           </div>
@@ -443,9 +483,9 @@ const MarathonLanding: React.FC = () => {
           <div className="row">
             <div className="col-lg-6 map-route-img">
               <span>
-                <img src="/assets/img/our-mission-2.svg" alt="effect" className="map-img-effect-1" />
-                <img src="/assets/img/tringle-gray-little.svg" alt="effect" className="map-img-effect-2" />
-                <img className="map-img" src="/assets/img/map.png" alt="marathon route map" />
+                <img src="/img/our-mission-2.svg" alt="effect" className="map-img-effect-1" />
+                <img src="/img/tringle-gray-little.svg" alt="effect" className="map-img-effect-2" />
+                <img className="map-img" src="/img/map.png" alt="marathon route map" />
               </span>
             </div>
             <div className="col-lg-6 map-route-info">
@@ -456,7 +496,7 @@ const MarathonLanding: React.FC = () => {
                 </div>
                 <div className="mission-number-cover">
                   <div className="mission-number-item">
-                    <img src="/assets/img/map-effect.svg" alt="effect" className="map-img-effect" />
+                    <img src="/img/map-effect.svg" alt="effect" className="map-img-effect" />
                     <div className="number">42,4km</div>
                     <span>Run distance</span>
                   </div>
@@ -469,12 +509,12 @@ const MarathonLanding: React.FC = () => {
 
       {/* Registration Form */}
       <section id="register" className="s-marathon-register">
-        <img src="/assets/img/tringle-gray-little.svg" alt="effect" className="register-img-effect-2" />
+        <img src="/img/tringle-gray-little.svg" alt="effect" className="register-img-effect-2" />
         <div className="container">
           <div className="marathon-register-row">
-            <img src="/assets/img/register-img.png" alt="registration" className="register-img" />
+            <img src="/img/register-img.png" alt="registration" className="register-img" />
             <div className="marathon-register">
-              <img src="/assets/img/our-mission-2.svg" alt="effect" className="register-img-effect-1" />
+              <img src="/img/our-mission-2.svg" alt="effect" className="register-img-effect-1" />
               <h2 className="title"><span>Register form</span></h2>
               <form onSubmit={handleRegistrationSubmit}>
                 <ul className="form-cover">
@@ -557,7 +597,7 @@ const MarathonLanding: React.FC = () => {
             {[1, 2, 4, 5, 6].map((num) => (
               <div key={num} className="client-slide">
                 <div className="client-slide-cover">
-                  <img src={`/assets/img/client-${num}.svg`} alt="sponsor" />
+                  <img src={`/img/client-${num}.svg`} alt="sponsor" />
                 </div>
               </div>
             ))}
@@ -606,7 +646,7 @@ const MarathonLanding: React.FC = () => {
                 <li className="comments">{Math.floor(Math.random() * 300) + 100} <i className="far fa-comment"></i></li>
                 <li className="like">{Math.floor(Math.random() * 200) + 100} <i className="far fa-heart"></i></li>
               </ul>
-              <img src={`/assets/img/instagram-${i + 1}.jpg`} alt="instagram post" />
+              <img src={`/img/instagram-${i + 1}.jpg`} alt="instagram post" />
             </a>
           ))}
         </div>
@@ -618,7 +658,7 @@ const MarathonLanding: React.FC = () => {
           <div className="row">
             <div className="footer-cont col-12 col-sm-6 col-lg-4">
               <a href="/" className="logo">
-                <img src="/assets/img/logo.svg" alt="logo" />
+                <img src="/img/logo.svg" alt="logo" />
               </a>
               <p>7100 Athens Place Washington, DC 20521</p>
               <ul className="footer-contacts">
