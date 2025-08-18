@@ -1,6 +1,6 @@
-import React from 'react';
+import { FC } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import LandingPage from './components/LandingPage';
+import MarathonLanding from './index';
 import LoginPage from './components/LoginPage';
 import RegistrationWizard from './components/RegistrationWizard';
 import Dashboard from './components/Dashboard';
@@ -11,10 +11,10 @@ import RaceManagement from './components/RaceManagement';
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminProtectedRoute from './components/AdminProtectedRoute';
 
-function App() {
+const App: FC = () => {
   return (
     <Routes>
-      <Route path="/" element={<LandingPage />} />
+      <Route path="/" element={<MarathonLanding />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegistrationWizard />} />
       <Route path="/admin/login" element={<AdminLogin />} />
@@ -50,16 +50,8 @@ function App() {
           </AdminProtectedRoute>
         } 
       />
-      <Route 
-        path="/admin/race-management" 
-        element={
-          <AdminProtectedRoute>
-            <RaceManagement />
-          </AdminProtectedRoute>
-        } 
-      />
     </Routes>
   );
-}
+};
 
 export default App;
