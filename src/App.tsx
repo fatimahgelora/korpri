@@ -3,6 +3,8 @@ import { Routes, Route } from 'react-router-dom';
 import MarathonLanding from './index';
 import LoginPage from './components/LoginPage';
 import RegistrationWizard from './components/RegistrationWizard';
+import UserRegistrationForm from './components/UserRegistrationForm';
+import ProfilePage from './components/ProfilePage';
 import Dashboard from './components/Dashboard';
 import AdminLogin from './components/AdminLogin';
 import AdminDashboard from './components/AdminDashboard';
@@ -16,13 +18,22 @@ const App: FC = () => {
     <Routes>
       <Route path="/" element={<MarathonLanding />} />
       <Route path="/login" element={<LoginPage />} />
-      <Route path="/register" element={<RegistrationWizard />} />
+      <Route path="/register" element={<UserRegistrationForm />} />
+      <Route path="/event/register" element={<RegistrationWizard />} />
       <Route path="/admin/login" element={<AdminLogin />} />
       <Route 
         path="/dashboard" 
         element={
           <ProtectedRoute>
             <Dashboard />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/profile" 
+        element={
+          <ProtectedRoute>
+            <ProfilePage />
           </ProtectedRoute>
         } 
       />

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 // TypeScript interfaces
 interface RegistrationForm {
@@ -55,8 +56,8 @@ const MarathonLanding: React.FC = () => {
 
   // Countdown timer effect
   useEffect(() => {
-    const targetDate = new Date('2024-12-27T00:00:00').getTime();
-    
+    const targetDate = new Date('2025-12-27T00:00:00').getTime();
+
     const timer = setInterval(() => {
       const now = new Date().getTime();
       const distance = targetDate - now;
@@ -79,7 +80,7 @@ const MarathonLanding: React.FC = () => {
     const interval = setInterval(() => {
       const $ = (window as any).$;
       const Parallax = (window as any).Parallax;
-      if ($ && $.fn && $.fn.slick) {
+      if ($ && $.fn && $.fn.slick && document.readyState === 'complete') {
         // Hero Slider (.marathon-slider)
         if ($('.marathon-slider').length && !$('.marathon-slider').hasClass('slick-initialized')) {
           $('.marathon-slider').slick({
@@ -267,7 +268,7 @@ const MarathonLanding: React.FC = () => {
       </div>
 
       {/* Background Effect */}
-      <span className="bg-effect" style={{backgroundImage: 'url(./img/main-bg.svg)'}}></span>
+      <span className="bg-effect" style={{ backgroundImage: 'url(/assets/img/main-bg.svg)' }}></span>
 
       {/* Header */}
       <header className="marathon-header-fixed header-fixed">
@@ -318,7 +319,7 @@ const MarathonLanding: React.FC = () => {
                   </li>
                 </ul>
               </nav>
-              <a href="#register" className="btn btn-white"><span>registration</span></a>
+              <Link to="/register" className="btn btn-white"><span>registration</span></Link>
             </div>
           </div>
         </div>
@@ -328,48 +329,90 @@ const MarathonLanding: React.FC = () => {
       <section className="s-marathon-slider">
         <div className="marathon-slider">
           <div className="marathon-slide marathon-slide-1">
-            <div className="scene">
-              <div className="scene-item">
-                <span className="marathon-effect" style={{backgroundImage: 'url(/img/effect-slider-marathon.svg)'}}></span>
+            <div data-hover-only="true" data-pointer-events="true" data-scalar-y="0" className="scene">
+              <div className="scene-item" data-depth="0.2">
+                <span className="marathon-effect" style={{ backgroundImage: 'url(/assets/img/effect-slider-marathon.svg)' }}></span>
               </div>
-              <div className="scene-item">
-                <img className="marathon-img" src="/img/slider-1.png" alt="runner" />
+              <div className="scene-item" data-depth="0.2">
+                <img className="marathon-img" src="/assets/img/slider-1.png" alt="runner" />
               </div>
-              <div className="scene-item">
+              <div className="scene-item" data-depth="0.5">
                 <div className="slider-location">
-                  San Francisco <br />marathon <span className="date">27 dec 2019</span>
+                  San Francisco <br />marathon <span className="date">27 dec 2025</span>
                 </div>
               </div>
-              <div className="scene-item">
+              <div className="scene-item" data-depth="0.35">
                 <div className="marathon-text-left">find<br />your</div>
               </div>
-              <div className="scene-item">
+              <div className="scene-item" data-depth="0.35">
                 <div className="marathon-text-right">Fast</div>
               </div>
             </div>
           </div>
+          <div className="marathon-slide marathon-slide-2">
+            <div data-hover-only="true" data-pointer-events="true" data-scalar-y="0" className="scene">
+              <div className="scene-item" data-depth="0.2">
+                <span className="marathon-effect" style={{ backgroundImage: 'url(/assets/img/effect-slider-marathon.svg)' }}></span>
+              </div>
+              <div className="scene-item" data-depth="0.2">
+                <img className="marathon-img" src="/assets/img/slider-2.png" alt="runner" />
+              </div>
+              <div className="scene-item" data-depth="0.5">
+                <div className="slider-location">
+                  San Francisco <br />marathon <span className="date">27 dec 2025</span>
+                </div>
+              </div>
+              <div className="scene-item" data-depth="0.35">
+                <div className="marathon-text-left">live<br />your</div>
+              </div>
+              <div className="scene-item" data-depth="0.35">
+                <div className="marathon-text-right">Life</div>
+              </div>
+            </div>
+          </div>
+          <div className="marathon-slide marathon-slide-3">
+            <div data-hover-only="true" data-pointer-events="true" data-scalar-y="0" className="scene">
+              <div className="scene-item" data-depth="0.2">
+                <span className="marathon-effect" style={{ backgroundImage: 'url(/assets/img/effect-slider-marathon.svg)' }}></span>
+              </div>
+              <div className="scene-item" data-depth="0.2">
+                <img className="marathon-img" src="/assets/img/slider-3.png" alt="runner" />
+              </div>
+              <div className="scene-item" data-depth="0.5">
+                <div className="slider-location">
+                  San Francisco <br />marathon <span className="date">27 dec 2025</span>
+                </div>
+              </div>
+              <div className="scene-item" data-depth="0.35">
+                <div className="marathon-text-left">Feel<br />your</div>
+              </div>
+              <div className="scene-item" data-depth="0.35">
+                <div className="marathon-text-right">burn!</div>
+              </div>
+            </div>
+          </div>
         </div>
-        <img className="marathon-slider-shape" src="/img/slider-home1-shape.svg" alt="shape" />
-        
+        <img className="marathon-slider-shape" src="/assets/img/slider-home1-shape.svg" alt="shape" />
+
         {/* Countdown Timer */}
         <div id="clockdiv" className="clock-timer clock-timer-marathon">
           <div className="days-item">
-            <img src="/img/counter-1.svg" alt="days" />
+            <img src="/assets/img/counter-1.svg" alt="days" />
             <span className="days">{countdown.days}</span>
             <div className="smalltext">Days</div>
           </div>
           <div className="hours-item">
-            <img src="/img/counter-2.svg" alt="hours" />
+            <img src="/assets/img/counter-2.svg" alt="hours" />
             <span className="hours">{countdown.hours}</span>
             <div className="smalltext">Hours</div>
           </div>
           <div className="minutes-item">
-            <img src="/img/counter-3.svg" alt="minutes" />
+            <img src="/assets/img/counter-3.svg" alt="minutes" />
             <span className="minutes">{countdown.minutes}</span>
             <div className="smalltext">Minutes</div>
           </div>
           <div className="seconds-item">
-            <img src="/img/counter-4.svg" alt="seconds" />
+            <img src="/assets/img/counter-4.svg" alt="seconds" />
             <span className="seconds">{countdown.seconds}</span>
             <div className="smalltext">Seconds</div>
           </div>
@@ -412,7 +455,7 @@ const MarathonLanding: React.FC = () => {
       </section>
 
       {/* Choose Us */}
-      <section className="s-choose-us" style={{backgroundImage: 'url(/img/bg-1.svg)'}}>
+      <section className="s-choose-us" style={{ backgroundImage: 'url(/img/bg-1.svg)' }}>
         <div className="container">
           <h2 className="title"><span>Reasons to run with us!</span></h2>
           <div className="row">
@@ -457,7 +500,7 @@ const MarathonLanding: React.FC = () => {
                     <div className="schedule-item-info">
                       <div className="date">{item.time}</div>
                       <h4>{item.title}</h4>
-                      <div className="schedule-info-content" style={{display: 'block'}}>
+                      <div className="schedule-info-content" style={{ display: 'block' }}>
                         <p>{item.description}</p>
                       </div>
                     </div>
@@ -519,8 +562,8 @@ const MarathonLanding: React.FC = () => {
               <form onSubmit={handleRegistrationSubmit}>
                 <ul className="form-cover">
                   <li className="inp-cover inp-name">
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       placeholder="Name"
                       value={registrationForm.name}
                       onChange={(e) => handleInputChange('name', e.target.value)}
@@ -528,8 +571,8 @@ const MarathonLanding: React.FC = () => {
                     />
                   </li>
                   <li className="inp-cover inp-email">
-                    <input 
-                      type="email" 
+                    <input
+                      type="email"
                       placeholder="E-mail"
                       value={registrationForm.email}
                       onChange={(e) => handleInputChange('email', e.target.value)}
@@ -537,7 +580,7 @@ const MarathonLanding: React.FC = () => {
                     />
                   </li>
                   <li className="inp-cover inp-age">
-                    <select 
+                    <select
                       value={registrationForm.age}
                       onChange={(e) => handleInputChange('age', e.target.value)}
                       required
@@ -551,7 +594,7 @@ const MarathonLanding: React.FC = () => {
                     </select>
                   </li>
                   <li className="inp-cover inp-gender">
-                    <select 
+                    <select
                       value={registrationForm.gender}
                       onChange={(e) => handleInputChange('gender', e.target.value)}
                       required
@@ -562,7 +605,7 @@ const MarathonLanding: React.FC = () => {
                     </select>
                   </li>
                   <li className="inp-text">
-                    <textarea 
+                    <textarea
                       placeholder="Message"
                       value={registrationForm.message}
                       onChange={(e) => handleInputChange('message', e.target.value)}
@@ -571,7 +614,7 @@ const MarathonLanding: React.FC = () => {
                 </ul>
                 <div className="checkbox-wrap">
                   <div className="checkbox-cover">
-                    <input 
+                    <input
                       type="checkbox"
                       checked={registrationForm.agreeToTerms}
                       onChange={(e) => handleInputChange('agreeToTerms', e.target.checked)}
@@ -640,7 +683,7 @@ const MarathonLanding: React.FC = () => {
       {/* Instagram Section */}
       <section className="s-instagram">
         <div className="instagram-cover">
-          {Array.from({length: 10}, (_, i) => (
+          {Array.from({ length: 10 }, (_, i) => (
             <a key={i + 1} href="#" className="instagram-item">
               <ul>
                 <li className="comments">{Math.floor(Math.random() * 300) + 100} <i className="far fa-comment"></i></li>
@@ -699,9 +742,9 @@ const MarathonLanding: React.FC = () => {
             <div className="footer-subscribe col-12 col-sm-6 col-lg-4">
               <h5>Subscribe to our newsletter. Stay up to date with our latest news and updates.</h5>
               <form className="subscribe-form" onSubmit={handleNewsletterSubmit}>
-                <input 
-                  className="inp-form" 
-                  type="email" 
+                <input
+                  className="inp-form"
+                  type="email"
                   placeholder="E-mail"
                   value={newsletterEmail}
                   onChange={(e) => setNewsletterEmail(e.target.value)}

@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import AddressSelector from './AddressSelector';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, Check, User, CreditCard, QrCode, Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
@@ -15,7 +16,12 @@ interface FormData {
   confirmPassword: string;
   alamat: string;
   jenisTicket: string;
-  kabKota: string;
+  // Address fields
+  province: string;
+  regency: string;
+  district: string;
+  village: string;
+  fullAddress: string;
 }
 
 function RegistrationWizard() {
@@ -32,14 +38,19 @@ function RegistrationWizard() {
     confirmPassword: '',
     alamat: '',
     jenisTicket: '',
-    kabKota: ''
+    // Address fields
+    province: '',
+    regency: '',
+    district: '',
+    village: '',
+    fullAddress: ''
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [hasAccount, setHasAccount] = useState(false);
-  const [snapToken, setSnapToken] = useState<string>('');
+  const [, setSnapToken] = useState<string>('');
 
   const steps = [
     { number: 1, title: 'Pilih Tipe', icon: User },
@@ -56,6 +67,23 @@ function RegistrationWizard() {
   const handleInputChange = (field: keyof FormData, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     setError('');
+  };
+
+  const handleAddressChange = (addressData: {
+    province: string;
+    regency: string;
+    district: string;
+    village: string;
+    fullAddress: string;
+  }) => {
+    setFormData(prev => ({
+      ...prev,
+      province: addressData.province,
+      regency: addressData.regency,
+      district: addressData.district,
+      village: addressData.village,
+      alamat: addressData.fullAddress
+    }));
   };
 
   const getTicketPrice = () => {
@@ -143,7 +171,7 @@ function RegistrationWizard() {
       if (existingRegistration) {
         setError('NIK sudah terdaftar');
         setLoading(false);
-        setShowQRIS(false);
+        setShowPayment(false);
         return;
       }
 
@@ -158,7 +186,134 @@ function RegistrationWizard() {
           nomer_hp: formData.nomerHp,
           alamat: formData.alamat,
           jenis_tiket: formData.jenisTicket,
-          kab_kota: formData.kabKota,
+          kab_kota: formData.regency,
+          ticket_price: getTicketPrice(),
+          payment_status: 'pending'
+        })
+        .select()
+        .single();
+
+      if (insertError) {
+        throw insertError;
+      }
+
+      // Create Midtrans transaction
+      const transactionData = {
+        transaction_details: {
+          order_id: data.id,
+          gross_amount: getTicketPrice()
+        },
+        customer_details: {
+          first_name: formData.nama,
+          email: formData.email,
+          phone: formData.nomerHp
+        },
+        item_details: [{
+          id: formData.jenisTicket,
+          price: getTicketPrice(),
+          quantity: 1,
+          name: `KORPRI RUN 2025 - ${getTicketTypeName(formData.jenisTicket)}`
+        }]
+      };
+
+      const midtransResponse = await createMidtransTransaction(transactionData);
+      setSnapToken(midtransResponse.token);
+
+      // Load Midtrans Snap script
+      const script = document.createElement('script');
+      script.src = MIDTRANS_CONFIG.isProduction 
+        ? 'https://app.midtrans.com/snap/snap.js' 
+        : 'https://app.sandbox.midtrans.com/snap/snap.js';
+      script.setAttribute('data-client-key', MIDTRANS_CONFIG.clientKey);
+      document.head.appendChild(script);
+
+      script.onload = () => {
+        // @ts-ignore
+        window.snap.pay(midtransResponse.token, {
+          onSuccess: function(result: any) {
+            console.log('Payment success:', result);
+            navigate('/dashboard', { 
+              state: { 
+                registrationSuccess: true,
+                registrationData: data
+              }
+            });
+          },
+          onPending: function(result: any) {
+            console.log('Payment pending:', result);
+            navigate('/dashboard', { 
+              state: { 
+                registrationSuccess: true,
+                registrationData: data,
+                paymentPending: true
+              }
+            });
+          },
+          onError: function(result: any) {
+            console.log('Payment error:', result);
+            setError('Pembayaran gagal. Silakan coba lagi.');
+            setShowPayment(false);
+          },
+          onClose: function() {
+            console.log('Payment popup closed');
+            setShowPayment(false);
+          }
+        });
+      };
+
+    } catch (err: any) {
+      console.error('Registration error:', err);
+      setError(err.message || 'Terjadi kesalahan saat mendaftar');
+      setShowPayment(false);
+    }
+    
+    setLoading(false);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+
+    try {
+      // Save user data to Supabase
+      const { data: userData, error: userError } = await supabase
+        .from('users')
+        .upsert(
+          {
+            email: formData.email,
+            nama: formData.nama,
+            nik: formData.nik,
+            nomer_hp: formData.nomerHp,
+            alamat: formData.alamat,
+            provinsi: formData.province,
+            kabupaten: formData.regency,
+            kecamatan: formData.district,
+            kelurahan: formData.village,
+            user_type: formData.userType,
+            jenis_tiket: formData.jenisTicket,
+          },
+          { onConflict: 'email' }
+        )
+        .select()
+        .single();
+
+      if (userError) {
+        throw userError;
+      }
+
+      // Save registration to database
+      const { data, error: insertError } = await supabase
+        .from('registrations')
+        .insert({
+          user_id: userData.id,
+          user_type: formData.userType,
+          nik: formData.nik,
+          nama: formData.nama,
+          nomer_hp: formData.nomerHp,
+          alamat: formData.alamat,
+          jenis_tiket: formData.jenisTicket,
+          kab_kota: formData.regency,
           ticket_price: getTicketPrice(),
           payment_status: 'pending'
         })
@@ -247,7 +402,7 @@ function RegistrationWizard() {
       case 1:
         return formData.userType && formData.jenisTicket;
       case 2:
-        const basicFields = formData.nik && formData.nama && formData.nomerHp && formData.email && formData.alamat && formData.kabKota;
+        const basicFields = formData.nik && formData.nama && formData.nomerHp && formData.email && formData.alamat && formData.regency;
         if (hasAccount) {
           return basicFields && formData.password;
         } else {
@@ -545,17 +700,9 @@ function RegistrationWizard() {
                       </div>
                     </div>
                   )}
-                  <div>
-                    <label className="block text-sm font-light tracking-wide uppercase text-gray-600 mb-2">
-                      Alamat
-                    </label>
-                    <textarea
-                      value={formData.alamat}
-                      onChange={(e) => handleInputChange('alamat', e.target.value)}
-                      rows={3}
-                      className="w-full px-0 py-4 border-0 border-b border-gray-200 focus:border-red-600 focus:ring-0 bg-transparent text-lg font-light resize-none"
-                      placeholder="Alamat lengkap"
-                    />
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Alamat Lengkap</label>
+                    <AddressSelector onAddressChange={handleAddressChange} />
                   </div>
                 </div>
               </div>

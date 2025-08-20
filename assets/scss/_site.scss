@@ -3870,6 +3870,16 @@ body.modal {
 @media(max-width: 1366px){
 	.bg-effect {
 		top: 200px;
+		position: fixed;
+		width: 100%;
+		height: 100%;
+		left: 0;
+		top: 0;
+		z-index: -1;
+		background-size: cover;
+		background-position: center;
+		background-repeat: no-repeat;
+		opacity: 0.1;
 	}
 	.instagram-cover .instagram-item ul{
 		font-size: 18px;
