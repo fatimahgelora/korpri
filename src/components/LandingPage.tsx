@@ -31,28 +31,28 @@ function LandingPage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Navigation - Swiss minimal */}
-      <nav className="fixed top-0 w-full bg-white z-50 border-b border-gray-200">
+      <nav className="fixed top-0 w-full bg-white z-50 border-b border-blue-300">
         <div className="max-w-6xl mx-auto px-8">
           <div className="flex justify-between items-center h-20">
             <div className="text-2xl font-light tracking-wide text-black">
               KORPRI RUN
             </div>
             <div className="hidden md:flex space-x-12 text-sm font-light tracking-wide">
-              <a href="#home" className="text-black hover:text-red-600 transition-colors">HOME</a>
-              <a href="#about" className="text-black hover:text-red-600 transition-colors">ABOUT</a>
-              <a href="#schedule" className="text-black hover:text-red-600 transition-colors">SCHEDULE</a>
-              <a href="#contact" className="text-black hover:text-red-600 transition-colors">CONTACT</a>
+              <a href="#home" className="text-black hover:text-blue-600 transition-colors">HOME</a>
+              <a href="#about" className="text-black hover:text-blue-600 transition-colors">ABOUT</a>
+              <a href="#schedule" className="text-black hover:text-blue-600 transition-colors">SCHEDULE</a>
+              <a href="#contact" className="text-black hover:text-blue-600 transition-colors">CONTACT</a>
             </div>
             <div className="flex space-x-4">
               <button 
                 onClick={() => navigate('/login')}
-                className="border border-red-600 text-red-600 px-8 py-3 text-sm font-light tracking-wide hover:bg-red-600 hover:text-white transition-colors"
+                className="border border-blue-600 text-blue-600 px-8 py-3 text-sm font-light tracking-wide hover:bg-blue-600 hover:text-white transition-colors"
               >
                 LOGIN
               </button>
               <button 
                 onClick={handleRegisterClick}
-                className="bg-red-600 text-white px-8 py-3 text-sm font-light tracking-wide hover:bg-red-700 transition-colors"
+                className="bg-blue-500 text-white px-8 py-3 text-sm font-light tracking-wide hover:bg-blue-700 transition-colors"
               >
                 REGISTER
               </button>
@@ -71,7 +71,7 @@ function LandingPage() {
       <section id="home" className="relative h-screen flex items-center justify-center overflow-hidden bg-gray-100">
         {/* Parallax Background */}
         <div 
-          className="absolute inset-0 bg-red-600"
+          className="absolute inset-0 bg-blue-500"
           style={{
             transform: `translateY(${scrollY * 0.5}px)`,
           }}
@@ -121,11 +121,11 @@ function LandingPage() {
                 </p>
                 <div className="grid grid-cols-2 gap-8 pt-8">
                   <div>
-                    <div className="text-3xl font-light text-red-600 mb-2">5,000+</div>
+                    <div className="text-3xl font-light text-blue-600 mb-2">5,000+</div>
                     <div className="text-sm font-light tracking-wide uppercase text-gray-600">Participants</div>
                   </div>
                   <div>
-                    <div className="text-3xl font-light text-red-600 mb-2">42K</div>
+                    <div className="text-3xl font-light text-blue-600 mb-2">42K</div>
                     <div className="text-sm font-light tracking-wide uppercase text-gray-600">Maximum Distance</div>
                   </div>
                 </div>
@@ -159,7 +159,7 @@ function LandingPage() {
             ].map((category, index) => (
               <div 
                 key={index}
-                className="group border-b border-gray-200 py-8 hover:bg-white transition-colors cursor-pointer"
+                className="group border-b border-blue-300 py-8 hover:bg-white transition-colors cursor-pointer"
               >
                 <div className="grid grid-cols-12 gap-8 items-center">
                   <div className="col-span-12 md:col-span-3">
@@ -170,10 +170,10 @@ function LandingPage() {
                     <div className="text-lg font-light text-gray-800">{category.desc}</div>
                   </div>
                   <div className="col-span-12 md:col-span-3">
-                    <div className="text-xl font-light text-red-600">Rp {category.price}</div>
+                    <div className="text-xl font-light text-blue-600">Rp {category.price}</div>
                   </div>
                   <div className="col-span-12 md:col-span-1">
-                    <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-red-600 transition-colors" />
+                    <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-blue-600 transition-colors" />
                   </div>
                 </div>
               </div>
@@ -203,9 +203,9 @@ function LandingPage() {
                   { time: "07:00", event: "Start Full Marathon 42K" },
                   { time: "12:00", event: "Penutupan & Pengumuman Pemenang" }
                 ].map((item, index) => (
-                  <div key={index} className="grid grid-cols-12 gap-8 py-4 border-b border-gray-100">
+                  <div key={index} className="grid grid-cols-12 gap-8 py-4 border-b border-blue-300">
                     <div className="col-span-3 md:col-span-2">
-                      <div className="text-lg font-light text-red-600">{item.time}</div>
+                      <div className="text-lg font-light text-blue-600">{item.time}</div>
                     </div>
                     <div className="col-span-9 md:col-span-10">
                       <div className="text-lg font-light text-gray-800">{item.event}</div>
@@ -219,7 +219,7 @@ function LandingPage() {
       </section>
 
       {/* Registration CTA - Swiss Minimal */}
-      <section className="py-32 bg-red-600">
+      <section className="py-32 bg-blue-500">
         <div className="max-w-6xl mx-auto px-8 text-center">
           <div className="max-w-3xl mx-auto">
             <h2 className="text-5xl font-light tracking-tight text-white mb-8">
@@ -248,7 +248,7 @@ function LandingPage() {
             </div>
             <button 
               onClick={handleRegisterClick}
-              className="bg-white text-red-600 px-12 py-4 text-sm font-light tracking-wide hover:bg-gray-100 transition-colors"
+              className="bg-white text-blue-600 px-12 py-4 text-sm font-light tracking-wide hover:bg-gray-100 transition-colors"
             >
               REGISTER NOW
             </button>
@@ -287,24 +287,24 @@ function LandingPage() {
                       <input 
                         type="text" 
                         placeholder="Name"
-                        className="w-full px-0 py-4 border-0 border-b border-gray-200 focus:border-red-600 focus:ring-0 bg-transparent text-lg font-light placeholder-gray-400"
+                        className="w-full px-0 py-4 border-0 border-b border-blue-300 focus:border-blue-600 focus:ring-0 bg-transparent text-lg font-light placeholder-gray-400"
                       />
                     </div>
                     <div>
                       <input 
                         type="email" 
                         placeholder="Email"
-                        className="w-full px-0 py-4 border-0 border-b border-gray-200 focus:border-red-600 focus:ring-0 bg-transparent text-lg font-light placeholder-gray-400"
+                        className="w-full px-0 py-4 border-0 border-b border-blue-300 focus:border-blue-600 focus:ring-0 bg-transparent text-lg font-light placeholder-gray-400"
                       />
                     </div>
                     <div>
                       <textarea 
                         rows={4} 
                         placeholder="Message"
-                        className="w-full px-0 py-4 border-0 border-b border-gray-200 focus:border-red-600 focus:ring-0 bg-transparent text-lg font-light placeholder-gray-400 resize-none"
+                        className="w-full px-0 py-4 border-0 border-b border-blue-300 focus:border-blue-600 focus:ring-0 bg-transparent text-lg font-light placeholder-gray-400 resize-none"
                       ></textarea>
                     </div>
-                    <button className="bg-red-600 text-white px-8 py-3 text-sm font-light tracking-wide hover:bg-red-700 transition-colors">
+                    <button className="bg-blue-500 text-white px-8 py-3 text-sm font-light tracking-wide hover:bg-blue-700 transition-colors">
                       SEND MESSAGE
                     </button>
                   </form>
@@ -316,13 +316,14 @@ function LandingPage() {
       </section>
 
       {/* Footer - Swiss Minimal */}
-      <footer className="py-16 bg-gray-50 border-t border-gray-200">
+      <footer className="py-16 bg-gray-50 border-t border-blue-300">
         <div className="max-w-6xl mx-auto px-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="text-lg font-light tracking-wide text-black mb-4 md:mb-0">
               KORPRI RUN 2025
             </div>
             <div className="text-sm font-light text-gray-600">
+              2025 All rights reserved
               © 2025 All rights reserved
             </div>
           </div>

@@ -137,7 +137,7 @@ const AddressSelector: React.FC<AddressSelectorProps> = ({ onAddressChange }) =>
   return (
     <div className="space-y-4">
       {error && (
-        <div className="text-red-500 text-sm mb-4">{error}</div>
+        <div className="text-blue-500 text-sm mb-4">{error}</div>
       )}
       
       <div>

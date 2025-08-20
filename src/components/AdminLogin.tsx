@@ -62,17 +62,17 @@ function AdminLogin() {
       <div className="max-w-md mx-auto px-8 py-16">
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12">
           <div className="text-center mb-12">
-            <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center mx-auto mb-6">
+            <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-6">
               <Shield className="w-8 h-8 text-white" />
             </div>
             <h1 className="text-3xl font-light tracking-tight text-black mb-4">
               Admin Panel
             </h1>
-            <div className="w-16 h-px bg-red-600 mx-auto"></div>
+            <div className="w-16 h-px bg-blue-600 mx-auto"></div>
           </div>
 
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-6 text-sm">
+            <div className="bg-blue-50 border border-blue-200 text-blue-700 px-4 py-3 rounded mb-6 text-sm">
               {error}
             </div>
           )}
@@ -88,7 +88,7 @@ function AdminLogin() {
                   type="email"
                   value={formData.email}
                   onChange={(e) => handleInputChange('email', e.target.value)}
-                  className="w-full pl-8 pr-0 py-4 border-0 border-b border-gray-200 focus:border-red-600 focus:ring-0 bg-transparent text-lg font-light"
+                  className="w-full pl-8 pr-0 py-4 border-0 border-b border-gray-200 focus:border-blue-600 focus:ring-0 bg-transparent text-lg font-light"
                   placeholder="admin@admin.com"
                   required
                 />
@@ -105,7 +105,7 @@ function AdminLogin() {
                   type={showPassword ? 'text' : 'password'}
                   value={formData.password}
                   onChange={(e) => handleInputChange('password', e.target.value)}
-                  className="w-full pl-8 pr-12 py-4 border-0 border-b border-gray-200 focus:border-red-600 focus:ring-0 bg-transparent text-lg font-light"
+                  className="w-full pl-8 pr-12 py-4 border-0 border-b border-gray-200 focus:border-blue-600 focus:ring-0 bg-transparent text-lg font-light"
                   placeholder="Masukkan password"
                   required
                 />
@@ -125,7 +125,7 @@ function AdminLogin() {
               className={`w-full py-4 text-lg font-light tracking-wide transition-colors ${
                 loading
                   ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                  : 'bg-red-600 text-white hover:bg-red-700'
+                  : 'bg-blue-600 text-white hover:bg-blue-700'
               }`}
             >
               {loading ? 'MEMPROSES...' : 'MASUK'}

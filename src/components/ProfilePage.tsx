@@ -20,14 +20,14 @@ export default function ProfilePage() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  
+
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [showWelcome, setShowWelcome] = useState(false);
   const [showCompleteProfile, setShowCompleteProfile] = useState(false);
-  
+
   const [formData, setFormData] = useState<ProfileData>({
     nik: '',
     nama: '',
@@ -54,7 +54,7 @@ export default function ProfilePage() {
 
     const fetchProfile = async () => {
       if (!user) return;
-      
+
       try {
         setLoading(true);
         const { data, error } = await supabase
@@ -64,7 +64,7 @@ export default function ProfilePage() {
           .single();
 
         if (error) throw error;
-        
+
         if (data) {
           setFormData({
             nik: data.nik || '',
@@ -118,10 +118,10 @@ export default function ProfilePage() {
         .eq('id', user.id);
 
       if (error) throw error;
-      
+
       setSuccess('Profil berhasil disimpan!');
       setShowCompleteProfile(false);
-      
+
       // If this was the first time completing the profile, refresh the page to update the UI
       if (showCompleteProfile) {
         window.location.reload();
@@ -138,7 +138,7 @@ export default function ProfilePage() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="w-12 h-12 border-4 border-red-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
           <p className="text-gray-600">Memuat data profil...</p>
         </div>
       </div>
@@ -151,7 +151,7 @@ export default function ProfilePage() {
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-6xl mx-auto px-8 py-6">
           <div className="flex items-center">
-            <button 
+            <button
               onClick={() => showCompleteProfile ? navigate('/dashboard') : navigate(-1)}
               className="flex items-center text-gray-600 hover:text-black transition-colors mr-4"
             >
@@ -182,14 +182,14 @@ export default function ProfilePage() {
               </div>
             </div>
           )}
-          
+
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-8 text-sm flex items-start">
+            <div className="bg-blue-50 border border-blue-200 text-blue-700 px-4 py-3 rounded mb-8 text-sm flex items-start">
               <AlertCircle className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0" />
               <span>{error}</span>
             </div>
           )}
-          
+
           {success && !showWelcome && (
             <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded mb-8 text-sm flex items-start">
               <CheckCircle className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0" />
@@ -202,8 +202,8 @@ export default function ProfilePage() {
               {showWelcome ? 'Lengkapi Profil Anda' : 'Profil Saya'}
             </h2>
             <p className="text-gray-600">
-              {showWelcome 
-                ? 'Mohon lengkapi data diri Anda untuk melanjutkan' 
+              {showWelcome
+                ? 'Mohon lengkapi data diri Anda untuk melanjutkan'
                 : 'Kelola informasi profil Anda untuk mengontrol, melindungi, dan mengamankan akun'}
             </p>
           </div>
@@ -213,14 +213,14 @@ export default function ProfilePage() {
               {/* NIK */}
               <div>
                 <label className="block text-sm font-light tracking-wide uppercase text-gray-600 mb-2">
-                  NIK <span className="text-red-500">*</span>
+                  NIK <span className="text-blue-500">*</span>
                 </label>
                 <div className="relative">
                   <input
                     type="text"
                     value={formData.nik}
                     onChange={(e) => handleInputChange('nik', e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     placeholder="Nomor Induk Kependudukan"
                     required
                   />
@@ -230,7 +230,7 @@ export default function ProfilePage() {
               {/* Nama Lengkap */}
               <div>
                 <label className="block text-sm font-light tracking-wide uppercase text-gray-600 mb-2">
-                  Nama Lengkap <span className="text-red-500">*</span>
+                  Nama Lengkap <span className="text-blue-500">*</span>
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -240,7 +240,7 @@ export default function ProfilePage() {
                     type="text"
                     value={formData.nama}
                     onChange={(e) => handleInputChange('nama', e.target.value)}
-                    className="w-full pl-10 px-4 py-3 border border-gray-300 rounded focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                    className="w-full pl-10 px-4 py-3 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     placeholder="Nama lengkap sesuai KTP"
                     required
                   />
@@ -260,7 +260,7 @@ export default function ProfilePage() {
                     type="email"
                     value={formData.email}
                     onChange={(e) => handleInputChange('email', e.target.value)}
-                    className="w-full pl-10 px-4 py-3 border border-gray-300 rounded bg-gray-100 focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                    className="w-full pl-10 px-4 py-3 border border-gray-300 rounded bg-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     disabled
                   />
                 </div>
@@ -269,7 +269,7 @@ export default function ProfilePage() {
               {/* Nomor HP */}
               <div>
                 <label className="block text-sm font-light tracking-wide uppercase text-gray-600 mb-2">
-                  Nomor HP <span className="text-red-500">*</span>
+                  Nomor HP <span className="text-blue-500">*</span>
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -279,7 +279,7 @@ export default function ProfilePage() {
                     type="tel"
                     value={formData.nomer_hp}
                     onChange={(e) => handleInputChange('nomer_hp', e.target.value.replace(/\D/g, ''))}
-                    className="w-full pl-10 px-4 py-3 border border-gray-300 rounded focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                    className="w-full pl-10 px-4 py-3 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     placeholder="081234567890"
                     required
                   />
@@ -299,7 +299,7 @@ export default function ProfilePage() {
                     type="text"
                     value={formData.province}
                     onChange={(e) => handleInputChange('province', e.target.value)}
-                    className="w-full pl-10 px-4 py-3 border border-gray-300 rounded focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                    className="w-full pl-10 px-4 py-3 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     placeholder="Provinsi"
                   />
                 </div>
@@ -314,7 +314,7 @@ export default function ProfilePage() {
                   type="text"
                   value={formData.regency}
                   onChange={(e) => handleInputChange('regency', e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="Kabupaten/Kota"
                 />
               </div>
@@ -328,7 +328,7 @@ export default function ProfilePage() {
                   type="text"
                   value={formData.district}
                   onChange={(e) => handleInputChange('district', e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="Kecamatan"
                 />
               </div>
@@ -342,7 +342,7 @@ export default function ProfilePage() {
                   type="text"
                   value={formData.village}
                   onChange={(e) => handleInputChange('village', e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="Kelurahan/Desa"
                 />
               </div>
@@ -350,7 +350,7 @@ export default function ProfilePage() {
               {/* Alamat Lengkap */}
               <div className="md:col-span-2">
                 <label className="block text-sm font-light tracking-wide uppercase text-gray-600 mb-2">
-                  Alamat Lengkap <span className="text-red-500">*</span>
+                  Alamat Lengkap <span className="text-blue-500">*</span>
                 </label>
                 <div className="relative">
                   <div className="absolute top-3 left-3">
@@ -359,7 +359,7 @@ export default function ProfilePage() {
                   <textarea
                     value={formData.alamat}
                     onChange={(e) => handleInputChange('alamat', e.target.value)}
-                    className="w-full pl-10 px-4 py-3 border border-gray-300 rounded focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                    className="w-full pl-10 px-4 py-3 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     rows={3}
                     placeholder="Alamat lengkap sesuai KTP"
                     required
@@ -372,11 +372,10 @@ export default function ProfilePage() {
               <button
                 type="submit"
                 disabled={saving}
-                className={`flex items-center justify-center w-full py-3 px-4 rounded text-white font-medium tracking-wide transition-colors ${
-                  saving
+                className={`flex items-center justify-center w-full py-3 px-4 rounded text-white font-medium tracking-wide transition-colors ${saving
                     ? 'bg-gray-400 cursor-not-allowed'
-                    : 'bg-red-600 hover:bg-red-700'
-                }`}
+                    : 'bg-blue-600 hover:bg-blue-700'
+                  }`}
               >
                 {saving ? (
                   <>
