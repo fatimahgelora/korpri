@@ -108,7 +108,7 @@ export default function UserRegistrationForm() {
       </div>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-6 text-sm">
+        <div className="bg-blue-50 border-blue-200 text-blue-700 px-4 py-3 rounded mb-6 text-sm">
           {error}
         </div>
       )}
@@ -128,7 +128,7 @@ export default function UserRegistrationForm() {
                 type="email"
                 value={formData.email}
                 onChange={(e) => handleInputChange('email', e.target.value)}
-                className="w-full pl-10 px-4 py-3 border border-gray-300 rounded focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                className="w-full pl-10 px-4 py-3 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="email@contoh.com"
                 required
               />
@@ -148,7 +148,7 @@ export default function UserRegistrationForm() {
                 type={showPassword ? 'text' : 'password'}
                 value={formData.password}
                 onChange={(e) => handleInputChange('password', e.target.value)}
-                className="w-full pl-10 pr-10 py-3 border border-gray-300 rounded focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                className="w-full pl-10 pr-10 py-3 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="Minimal 6 karakter"
                 minLength={6}
                 required
@@ -180,7 +180,7 @@ export default function UserRegistrationForm() {
                 type={showPassword ? 'text' : 'password'}
                 value={formData.confirmPassword}
                 onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
-                className="w-full pl-10 px-4 py-3 border border-gray-300 rounded focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                className="w-full pl-10 px-4 py-3 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="Ulangi password"
                 minLength={6}
                 required
@@ -197,7 +197,7 @@ export default function UserRegistrationForm() {
             className={`w-full py-3 px-4 rounded text-white font-medium tracking-wide transition-colors ${
               loading
                 ? 'bg-gray-400 cursor-not-allowed'
-                : 'bg-red-600 hover:bg-red-700'
+                : 'bg-blue-600 hover:bg-blue-700'
             }`}
           >
             {loading ? 'MEMPROSES...' : 'DAFTAR SEKARANG'}
@@ -207,7 +207,7 @@ export default function UserRegistrationForm() {
 
       <div className="mt-6 text-center text-sm text-gray-600">
         Sudah punya akun?{' '}
-        <Link to="/login" className="text-red-600 hover:underline font-medium">
+        <Link to="/login" className="text-blue-600 hover:underline font-medium">
           Masuk di sini
         </Link>
       </div>

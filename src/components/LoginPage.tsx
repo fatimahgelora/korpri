@@ -30,7 +30,7 @@ function LoginPage() {
       .single();
 
     if (error || !data) return false;
-    
+
     // Check if required profile fields are filled
     return !!(data.nik && data.nama && data.nomer_hp && data.alamat);
   };
@@ -62,7 +62,7 @@ function LoginPage() {
           setLoading(false);
           return;
         }
-        
+
         const { error: signUpError } = await signUp(formData.email, formData.password);
         if (signUpError) {
           setError(signUpError.message);
@@ -74,7 +74,7 @@ function LoginPage() {
     } catch (err) {
       setError('Terjadi kesalahan. Silakan coba lagi.');
     }
-    
+
     setLoading(false);
   };
 
@@ -84,7 +84,7 @@ function LoginPage() {
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-4xl mx-auto px-8 py-6">
           <div className="flex items-center justify-between">
-            <button 
+            <button
               onClick={() => navigate('/')}
               className="flex items-center text-gray-600 hover:text-black transition-colors"
             >
@@ -105,11 +105,11 @@ function LoginPage() {
             <h1 className="text-3xl font-light tracking-tight text-black mb-4">
               {isLogin ? 'Masuk ke Akun' : 'Buat Akun Baru'}
             </h1>
-            <div className="w-16 h-px bg-red-600 mx-auto"></div>
+            <div className="w-16 h-px bg-blue-600 mx-auto"></div>
           </div>
 
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-6 text-sm">
+            <div className="bg-blue-50 border border-blue-200 text-blue-700 px-4 py-3 rounded mb-6 text-sm">
               {error}
             </div>
           )}
@@ -125,7 +125,7 @@ function LoginPage() {
                   type="email"
                   value={formData.email}
                   onChange={(e) => handleInputChange('email', e.target.value)}
-                  className="w-full pl-8 pr-0 py-4 border-0 border-b border-gray-200 focus:border-red-600 focus:ring-0 bg-transparent text-lg font-light"
+                  className="w-full pl-8 pr-0 py-4 border-0 border-b border-gray-200 focus:border-blue-600 focus:ring-0 bg-transparent text-lg font-light"
                   placeholder="email@example.com"
                   required
                 />
@@ -142,7 +142,7 @@ function LoginPage() {
                   type={showPassword ? 'text' : 'password'}
                   value={formData.password}
                   onChange={(e) => handleInputChange('password', e.target.value)}
-                  className="w-full pl-8 pr-12 py-4 border-0 border-b border-gray-200 focus:border-red-600 focus:ring-0 bg-transparent text-lg font-light"
+                  className="w-full pl-8 pr-12 py-4 border-0 border-b border-gray-200 focus:border-blue-600 focus:ring-0 bg-transparent text-lg font-light"
                   placeholder="Masukkan password"
                   required
                   minLength={6}
@@ -168,7 +168,7 @@ function LoginPage() {
                     type={showPassword ? 'text' : 'password'}
                     value={formData.confirmPassword}
                     onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
-                    className="w-full pl-8 pr-0 py-4 border-0 border-b border-gray-200 focus:border-red-600 focus:ring-0 bg-transparent text-lg font-light"
+                    className="w-full pl-8 pr-0 py-4 border-0 border-b border-gray-200 focus:border-blue-600 focus:ring-0 bg-transparent text-lg font-light"
                     placeholder="Ulangi password"
                     required
                     minLength={6}
@@ -180,11 +180,10 @@ function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className={`w-full py-4 text-lg font-light tracking-wide transition-colors ${
-                loading
+              className={`w-full py-4 text-lg font-light tracking-wide transition-colors ${loading
                   ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                  : 'bg-red-600 text-white hover:bg-red-700'
-              }`}
+                  : 'bg-blue-600 text-white hover:bg-blue-700'
+                }`}
             >
               {loading ? 'MEMPROSES...' : (isLogin ? 'MASUK' : 'DAFTAR')}
             </button>
@@ -201,7 +200,7 @@ function LoginPage() {
                 setError('');
                 setFormData({ email: formData.email, password: '', confirmPassword: '' });
               }}
-              className="text-red-600 hover:text-red-700 font-light tracking-wide mt-2"
+              className="text-blue-600 hover:text-blue-700 font-light tracking-wide mt-2"
             >
               {isLogin ? 'DAFTAR SEKARANG' : 'MASUK DI SINI'}
             </button>

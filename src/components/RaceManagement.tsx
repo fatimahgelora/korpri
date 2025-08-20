@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  ArrowLeft, 
-  QrCode, 
-  Scan, 
-  Trophy, 
-  Clock, 
-  Users, 
+import {
+  ArrowLeft,
+  QrCode,
+  Scan,
+  Trophy,
+  Clock,
+  Users,
   CheckCircle,
   Play,
   Flag,
@@ -59,7 +59,7 @@ function RaceManagement() {
   const [raceStats, setRaceStats] = useState<RaceStats | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  
+
   // Form states
   const [ticketNumber, setTicketNumber] = useState('');
   const [bibNumber, setBibNumber] = useState('');
@@ -107,7 +107,7 @@ function RaceManagement() {
         }
         throw error;
       }
-      
+
       setBibAssignments(data?.map(item => ({
         ...item,
         participant_name: item.registrations?.nama || '',
@@ -144,7 +144,7 @@ function RaceManagement() {
         }
         throw error;
       }
-      
+
       setRaceResults(data?.map(item => ({
         ...item,
         participant_name: item.registrations?.nama || '',
@@ -225,7 +225,7 @@ function RaceManagement() {
       });
 
       if (error) throw error;
-      
+
       if (data && data.length > 0 && data[0].success) {
         await fetchBibAssignments();
         setError('');
@@ -253,7 +253,7 @@ function RaceManagement() {
       });
 
       if (error) throw error;
-      
+
       if (data && data.length > 0 && data[0].success) {
         await fetchBibAssignments();
         setTicketNumber('');
@@ -283,7 +283,7 @@ function RaceManagement() {
       });
 
       if (error) throw error;
-      
+
       if (data && data.length > 0 && data[0].success) {
         await fetchRaceResults();
         setBibNumber('');
@@ -313,7 +313,7 @@ function RaceManagement() {
       });
 
       if (error) throw error;
-      
+
       if (data && data.length > 0 && data[0].success) {
         await fetchRaceResults();
         await fetchRaceStats();
@@ -353,12 +353,12 @@ function RaceManagement() {
       registered: { color: 'bg-blue-100 text-blue-800', text: 'Registered' },
       started: { color: 'bg-orange-100 text-orange-800', text: 'Started' },
       finished: { color: 'bg-green-100 text-green-800', text: 'Finished' },
-      dnf: { color: 'bg-red-100 text-red-800', text: 'DNF' },
-      dsq: { color: 'bg-red-100 text-red-800', text: 'DSQ' }
+      dnf: { color: 'bg-blue-100 text-blue-800', text: 'DNF' },
+      dsq: { color: 'bg-blue-100 text-blue-800', text: 'DSQ' }
     };
-    
+
     const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.registered;
-    
+
     return (
       <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium ${config.color}`}>
         {config.text}
@@ -383,7 +383,7 @@ function RaceManagement() {
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-8 py-6">
           <div className="flex items-center justify-between">
-            <button 
+            <button
               onClick={() => navigate('/admin/dashboard')}
               className="flex items-center text-gray-600 hover:text-black transition-colors"
             >
@@ -418,11 +418,10 @@ function RaceManagement() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as any)}
-                  className={`flex items-center px-4 py-4 border-b-2 transition-colors ${
-                    activeTab === tab.id
-                      ? 'border-red-600 text-red-600'
+                  className={`flex items-center px-4 py-4 border-b-2 transition-colors ${activeTab === tab.id
+                      ? 'border-blue-600 text-blue-600'
                       : 'border-transparent text-gray-600 hover:text-black'
-                  }`}
+                    }`}
                 >
                   <Icon className="w-5 h-5 mr-2" />
                   <span className="font-light">{tab.label}</span>
@@ -436,14 +435,14 @@ function RaceManagement() {
       <div className="max-w-7xl mx-auto px-8 py-12">
         {/* Error Message */}
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-8">
+          <div className="bg-blue-50 border border-blue-200 text-blue-700 px-4 py-3 rounded mb-8">
             <div className="flex items-center justify-between">
               <span>{error}</span>
               {error.includes('database schema') && (
                 <button
                   onClick={createRaceTables}
                   disabled={loading}
-                  className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition-colors"
+                  className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors"
                 >
                   {loading ? 'Creating...' : 'Setup Database'}
                 </button>
@@ -468,15 +467,15 @@ function RaceManagement() {
               <div className="text-xs font-light tracking-wide uppercase text-gray-600">Finished</div>
             </div>
             <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 text-center">
-              <div className="text-2xl font-light text-red-600">{raceStats.fun_run_finished}</div>
+              <div className="text-2xl font-light text-blue-600">{raceStats.fun_run_finished}</div>
               <div className="text-xs font-light tracking-wide uppercase text-gray-600">5K Done</div>
             </div>
             <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 text-center">
-              <div className="text-2xl font-light text-red-600">{raceStats.half_marathon_finished}</div>
+              <div className="text-2xl font-light text-blue-600">{raceStats.half_marathon_finished}</div>
               <div className="text-xs font-light tracking-wide uppercase text-gray-600">21K Done</div>
             </div>
             <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 text-center">
-              <div className="text-2xl font-light text-red-600">{raceStats.full_marathon_finished}</div>
+              <div className="text-2xl font-light text-blue-600">{raceStats.full_marathon_finished}</div>
               <div className="text-xs font-light tracking-wide uppercase text-gray-600">42K Done</div>
             </div>
           </div>
@@ -498,13 +497,13 @@ function RaceManagement() {
                       type="text"
                       value={ticketNumber}
                       onChange={(e) => setTicketNumber(e.target.value)}
-                      className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                      className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       placeholder="Enter or scan ticket number"
                     />
                     <button
                       onClick={handleCollectBib}
                       disabled={loading}
-                      className="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-colors flex items-center"
+                      className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors flex items-center"
                     >
                       <Scan className="w-5 h-5 mr-2" />
                       {loading ? 'Processing...' : 'Collect Bib'}
@@ -531,12 +530,12 @@ function RaceManagement() {
                       placeholder="Search..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                      className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     />
                   </div>
                 </div>
               </div>
-              
+
               <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200">
                   <thead className="bg-gray-50">
@@ -603,7 +602,7 @@ function RaceManagement() {
                     type="number"
                     value={bibNumber}
                     onChange={(e) => setBibNumber(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     placeholder="Enter bib number"
                   />
                   <button
@@ -624,13 +623,13 @@ function RaceManagement() {
                     type="number"
                     value={bibNumber}
                     onChange={(e) => setBibNumber(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     placeholder="Enter bib number"
                   />
                   <button
                     onClick={handleRaceFinish}
                     disabled={loading}
-                    className="w-full bg-red-600 text-white py-3 rounded-lg hover:bg-red-700 transition-colors flex items-center justify-center"
+                    className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center"
                   >
                     <Flag className="w-5 h-5 mr-2" />
                     {loading ? 'Recording...' : 'Record Finish'}
@@ -644,7 +643,7 @@ function RaceManagement() {
               <div className="px-6 py-4 border-b border-gray-200">
                 <h2 className="text-xl font-light text-black">Live Race Status</h2>
               </div>
-              
+
               <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200">
                   <thead className="bg-gray-50">
@@ -714,16 +713,16 @@ function RaceManagement() {
                       placeholder="Search..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                      className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     />
                   </div>
-                  <button className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors flex items-center">
+                  <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center">
                     <Download className="w-4 h-4 mr-2" />
                     Export
                   </button>
                 </div>
               </div>
-              
+
               <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200">
                   <thead className="bg-gray-50">

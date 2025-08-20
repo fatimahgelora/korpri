@@ -77,7 +77,7 @@ function Dashboard() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="w-8 h-8 border-2 border-red-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <div className="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
           <div className="text-lg font-light text-gray-600">Memuat data...</div>
         </div>
       </div>
@@ -96,11 +96,11 @@ function Dashboard() {
             <div className="flex items-center space-x-4">
               <button
                 onClick={() => navigate('/profile')}
-                className="flex items-center text-gray-600 hover:text-red-600 transition-colors"
+                className="flex items-center text-gray-600 hover:text-blue-600 transition-colors"
                 title="Profil Saya"
               >
                 <UserIcon className="w-5 h-5 mr-2" />
-                <span className="text-sm font-light">Profil</span>
+                <span className="text-sm font-light"></span>
               </button>
               <button
                 onClick={() => navigate('/')}
@@ -111,7 +111,7 @@ function Dashboard() {
               </button>
               <button
                 onClick={handleSignOut}
-                className="flex items-center text-gray-600 hover:text-red-600 transition-colors"
+                className="flex items-center text-gray-600 hover:text-blue-600 transition-colors"
               >
                 <LogOut className="w-5 h-5 mr-2" />
                 <span className="text-sm font-light tracking-wide"></span>
@@ -142,7 +142,7 @@ function Dashboard() {
 
         {/* Error Message */}
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-8 text-sm">
+          <div className="bg-blue-50 border border-blue-200 text-blue-700 px-4 py-3 rounded mb-8 text-sm">
             {error}
           </div>
         )}
@@ -167,21 +167,23 @@ function Dashboard() {
                     Lihat status pendaftaran dan tiket Anda
                   </p>
                 </div>
+                {/* new line */}
+                <br />
                 <button
                   onClick={() => navigate('/event/register')}
-                  className="flex items-center bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded transition-colors"
+                  className="flex items-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition-colors"
                 >
                   <Plus className="w-4 h-4 mr-2" />
                   Daftar Event Baru
                 </button>
               </div>
-              <button
+              {/* <button
                 onClick={() => navigate('/register')}
-                className="bg-red-600 text-white px-8 py-3 text-sm font-light tracking-wide hover:bg-red-700 transition-colors flex items-center mx-auto"
+                className="bg-blue-600 text-white px-8 py-3 text-sm font-light tracking-wide hover:bg-blue-700 transition-colors flex items-center mx-auto"
               >
                 <Plus className="w-5 h-5 mr-2" />
                 Daftar Sekarang
-              </button>
+              </button> */}
             </div>
           </div>
         )}
@@ -195,7 +197,7 @@ function Dashboard() {
               </h1>
               <button
                 onClick={() => navigate('/register')}
-                className="bg-red-600 text-white px-6 py-2 text-sm font-light tracking-wide hover:bg-red-700 transition-colors flex items-center"
+                className="bg-blue-600 text-white px-6 py-2 text-sm font-light tracking-wide hover:bg-blue-700 transition-colors flex items-center"
               >
                 <Plus className="w-4 h-4 mr-2" />
                 DAFTAR LAGI
@@ -212,7 +214,7 @@ function Dashboard() {
                       Informasi Tiket
                     </h2>
 
-                    <div className="bg-red-600 text-white p-8 rounded-lg mb-6">
+                    <div className="bg-blue-600 text-white p-8 rounded-lg mb-6">
                       <div className="flex justify-between items-start mb-6">
                         <div>
                           <div className="text-2xl font-light tracking-wide">KORPRI RUN 2025</div>
@@ -248,7 +250,7 @@ function Dashboard() {
                         setSelectedTicket(registration.ticket_number);
                         setShowQRModal(true);
                       }}
-                      className="w-full bg-red-600 text-white py-3 text-sm font-light tracking-wide hover:bg-red-700 transition-colors flex items-center justify-center mt-2"
+                      className="w-full bg-blue-600 text-white py-3 text-sm font-light tracking-wide hover:bg-blue-700 transition-colors flex items-center justify-center mt-2"
                     >
                       <QrCode className="w-5 h-5 mr-2" />
                       TAMPILKAN QR CODE
@@ -259,7 +261,7 @@ function Dashboard() {
                         setSelectedTicket(registration.ticket_number);
                         setShowQRModal(true);
                       }}
-                      className="w-full bg-red-600 text-white py-3 text-sm font-light tracking-wide hover:bg-red-700 transition-colors flex items-center justify-center mt-2"
+                      className="w-full bg-blue-600 text-white py-3 text-sm font-light tracking-wide hover:bg-blue-700 transition-colors flex items-center justify-center mt-2"
                     >
                       <QrCode className="w-5 h-5 mr-2" />
                       TAMPILKAN QR CODE

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import AddressSelector from './AddressSelector';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, ArrowRight, Check, User, CreditCard, QrCode, Mail, Lock, Eye, EyeOff } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Check, User, CreditCard, QrCode } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { supabase } from '../lib/supabase';
 import { createMidtransTransaction, getTicketTypeName, MIDTRANS_CONFIG } from '../lib/midtrans';
@@ -11,9 +11,6 @@ interface FormData {
   nik: string;
   nama: string;
   nomerHp: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
   alamat: string;
   jenisTicket: string;
   // Address fields
@@ -33,9 +30,6 @@ function RegistrationWizard() {
     nik: '',
     nama: '',
     nomerHp: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
     alamat: '',
     jenisTicket: '',
     // Address fields
@@ -45,11 +39,9 @@ function RegistrationWizard() {
     village: '',
     fullAddress: ''
   });
-  const [showPassword, setShowPassword] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [hasAccount, setHasAccount] = useState(false);
   const [, setSnapToken] = useState<string>('');
 
   const steps = [
@@ -101,43 +93,7 @@ function RegistrationWizard() {
   };
 
   const handleNext = async () => {
-    if (currentStep === 2) {
-      // Handle authentication before moving to payment
-      setLoading(true);
-      setError('');
-
-      try {
-        if (hasAccount) {
-          // Sign in existing user
-          const { error: signInError } = await signIn(formData.email, formData.password);
-          if (signInError) {
-            setError(signInError.message);
-            setLoading(false);
-            return;
-          }
-        } else {
-          // Create new account
-          if (formData.password !== formData.confirmPassword) {
-            setError('Password tidak cocok');
-            setLoading(false);
-            return;
-          }
-          
-          const { error: signUpError } = await signUp(formData.email, formData.password);
-          if (signUpError) {
-            setError(signUpError.message);
-            setLoading(false);
-            return;
-          }
-        }
-        
-        setLoading(false);
-        setCurrentStep(currentStep + 1);
-      } catch (err) {
-        setError('Terjadi kesalahan. Silakan coba lagi.');
-        setLoading(false);
-      }
-    } else if (currentStep < 3) {
+    if (currentStep < 3) {
       setCurrentStep(currentStep + 1);
     }
   };
@@ -205,7 +161,7 @@ function RegistrationWizard() {
         },
         customer_details: {
           first_name: formData.nama,
-          email: formData.email,
+          email: user.email || '',
           phone: formData.nomerHp
         },
         item_details: [{
@@ -221,8 +177,8 @@ function RegistrationWizard() {
 
       // Load Midtrans Snap script
       const script = document.createElement('script');
-      script.src = MIDTRANS_CONFIG.isProduction 
-        ? 'https://app.midtrans.com/snap/snap.js' 
+      script.src = MIDTRANS_CONFIG.isProduction
+        ? 'https://app.midtrans.com/snap/snap.js'
         : 'https://app.sandbox.midtrans.com/snap/snap.js';
       script.setAttribute('data-client-key', MIDTRANS_CONFIG.clientKey);
       document.head.appendChild(script);
@@ -230,31 +186,31 @@ function RegistrationWizard() {
       script.onload = () => {
         // @ts-ignore
         window.snap.pay(midtransResponse.token, {
-          onSuccess: function(result: any) {
+          onSuccess: function (result: any) {
             console.log('Payment success:', result);
-            navigate('/dashboard', { 
-              state: { 
+            navigate('/dashboard', {
+              state: {
                 registrationSuccess: true,
                 registrationData: data
               }
             });
           },
-          onPending: function(result: any) {
+          onPending: function (result: any) {
             console.log('Payment pending:', result);
-            navigate('/dashboard', { 
-              state: { 
+            navigate('/dashboard', {
+              state: {
                 registrationSuccess: true,
                 registrationData: data,
                 paymentPending: true
               }
             });
           },
-          onError: function(result: any) {
+          onError: function (result: any) {
             console.log('Payment error:', result);
             setError('Pembayaran gagal. Silakan coba lagi.');
             setShowPayment(false);
           },
-          onClose: function() {
+          onClose: function () {
             console.log('Payment popup closed');
             setShowPayment(false);
           }
@@ -266,7 +222,7 @@ function RegistrationWizard() {
       setError(err.message || 'Terjadi kesalahan saat mendaftar');
       setShowPayment(false);
     }
-    
+
     setLoading(false);
   };
 
@@ -332,7 +288,7 @@ function RegistrationWizard() {
         },
         customer_details: {
           first_name: formData.nama,
-          email: formData.email,
+          email: user.email || '',
           phone: formData.nomerHp
         },
         item_details: [{
@@ -348,8 +304,8 @@ function RegistrationWizard() {
 
       // Load Midtrans Snap script
       const script = document.createElement('script');
-      script.src = MIDTRANS_CONFIG.isProduction 
-        ? 'https://app.midtrans.com/snap/snap.js' 
+      script.src = MIDTRANS_CONFIG.isProduction
+        ? 'https://app.midtrans.com/snap/snap.js'
         : 'https://app.sandbox.midtrans.com/snap/snap.js';
       script.setAttribute('data-client-key', MIDTRANS_CONFIG.clientKey);
       document.head.appendChild(script);
@@ -357,31 +313,31 @@ function RegistrationWizard() {
       script.onload = () => {
         // @ts-ignore
         window.snap.pay(midtransResponse.token, {
-          onSuccess: function(result: any) {
+          onSuccess: function (result: any) {
             console.log('Payment success:', result);
-            navigate('/dashboard', { 
-              state: { 
+            navigate('/dashboard', {
+              state: {
                 registrationSuccess: true,
                 registrationData: data
               }
             });
           },
-          onPending: function(result: any) {
+          onPending: function (result: any) {
             console.log('Payment pending:', result);
-            navigate('/dashboard', { 
-              state: { 
+            navigate('/dashboard', {
+              state: {
                 registrationSuccess: true,
                 registrationData: data,
                 paymentPending: true
               }
             });
           },
-          onError: function(result: any) {
+          onError: function (result: any) {
             console.log('Payment error:', result);
             setError('Pembayaran gagal. Silakan coba lagi.');
             setShowPayment(false);
           },
-          onClose: function() {
+          onClose: function () {
             console.log('Payment popup closed');
             setShowPayment(false);
           }
@@ -393,7 +349,7 @@ function RegistrationWizard() {
       setError(err.message || 'Terjadi kesalahan saat mendaftar');
       setShowPayment(false);
     }
-    
+
     setLoading(false);
   };
 
@@ -402,12 +358,7 @@ function RegistrationWizard() {
       case 1:
         return formData.userType && formData.jenisTicket;
       case 2:
-        const basicFields = formData.nik && formData.nama && formData.nomerHp && formData.email && formData.alamat && formData.regency;
-        if (hasAccount) {
-          return basicFields && formData.password;
-        } else {
-          return basicFields && formData.password && formData.confirmPassword && formData.password.length >= 6;
-        }
+        return formData.nik && formData.nama && formData.nomerHp && formData.alamat && formData.regency;
       case 3:
         return true;
       default:
@@ -421,7 +372,7 @@ function RegistrationWizard() {
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-4xl mx-auto px-8 py-6">
           <div className="flex items-center justify-between">
-            <button 
+            <button
               onClick={handleBack}
               className="flex items-center text-gray-600 hover:text-black transition-colors"
             >
@@ -442,11 +393,10 @@ function RegistrationWizard() {
           <div className="flex items-center justify-center space-x-8">
             {steps.map((step, index) => (
               <div key={step.number} className="flex items-center">
-                <div className={`flex items-center justify-center w-12 h-12 rounded-full border-2 transition-colors ${
-                  currentStep >= step.number 
-                    ? 'bg-red-600 border-red-600 text-white' 
+                <div className={`flex items-center justify-center w-12 h-12 rounded-full border-2 transition-colors ${currentStep >= step.number
+                    ? 'bg-blue-600 border-blue-600 text-white'
                     : 'border-gray-300 text-gray-400'
-                }`}>
+                  }`}>
                   {currentStep > step.number ? (
                     <Check className="w-6 h-6" />
                   ) : (
@@ -454,21 +404,18 @@ function RegistrationWizard() {
                   )}
                 </div>
                 <div className="ml-3">
-                  <div className={`text-sm font-light tracking-wide ${
-                    currentStep >= step.number ? 'text-black' : 'text-gray-400'
-                  }`}>
+                  <div className={`text-sm font-light tracking-wide ${currentStep >= step.number ? 'text-black' : 'text-gray-400'
+                    }`}>
                     STEP {step.number}
                   </div>
-                  <div className={`text-lg font-light ${
-                    currentStep >= step.number ? 'text-black' : 'text-gray-400'
-                  }`}>
+                  <div className={`text-lg font-light ${currentStep >= step.number ? 'text-black' : 'text-gray-400'
+                    }`}>
                     {step.title}
                   </div>
                 </div>
                 {index < steps.length - 1 && (
-                  <div className={`w-16 h-px mx-8 ${
-                    currentStep > step.number ? 'bg-red-600' : 'bg-gray-300'
-                  }`} />
+                  <div className={`w-16 h-px mx-8 ${currentStep > step.number ? 'bg-blue-600' : 'bg-gray-300'
+                    }`} />
                 )}
               </div>
             ))}
@@ -479,9 +426,9 @@ function RegistrationWizard() {
       {/* Form Content */}
       <div className="max-w-4xl mx-auto px-8 py-16">
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12">
-          
+
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-8 text-sm">
+            <div className="bg-blue-50 border border-blue-200 text-blue-700 px-4 py-3 rounded mb-8 text-sm">
               {error}
             </div>
           )}
@@ -493,7 +440,7 @@ function RegistrationWizard() {
                 <h2 className="text-3xl font-light tracking-tight text-black mb-4">
                   Pilih Tipe Peserta & Tiket
                 </h2>
-                <div className="w-16 h-px bg-red-600 mx-auto"></div>
+                <div className="w-16 h-px bg-blue-600 mx-auto"></div>
               </div>
 
               {/* User Type Selection */}
@@ -504,11 +451,10 @@ function RegistrationWizard() {
                     <button
                       key={type}
                       onClick={() => handleInputChange('userType', type as 'ASN' | 'Umum')}
-                      className={`p-6 border-2 rounded-lg text-left transition-colors ${
-                        formData.userType === type
-                          ? 'border-red-600 bg-red-50'
+                      className={`p-6 border-2 rounded-lg text-left transition-colors ${formData.userType === type
+                          ? 'border-blue-600 bg-blue-50'
                           : 'border-gray-200 hover:border-gray-300'
-                      }`}
+                        }`}
                     >
                       <div className="text-lg font-light text-black">{type}</div>
                       <div className="text-sm text-gray-600 mt-1">
@@ -528,11 +474,10 @@ function RegistrationWizard() {
                       <button
                         key={ticket.id}
                         onClick={() => handleInputChange('jenisTicket', ticket.id)}
-                        className={`w-full p-6 border-2 rounded-lg text-left transition-colors ${
-                          formData.jenisTicket === ticket.id
-                            ? 'border-red-600 bg-red-50'
+                        className={`w-full p-6 border-2 rounded-lg text-left transition-colors ${formData.jenisTicket === ticket.id
+                            ? 'border-blue-600 bg-blue-50'
                             : 'border-gray-200 hover:border-gray-300'
-                        }`}
+                          }`}
                       >
                         <div className="flex justify-between items-center">
                           <div>
@@ -540,7 +485,7 @@ function RegistrationWizard() {
                             <div className="text-sm text-gray-600">{ticket.distance}</div>
                           </div>
                           <div className="text-right">
-                            <div className="text-xl font-light text-red-600">
+                            <div className="text-xl font-light text-blue-600">
                               {formatPrice(ticket.price[formData.userType])}
                             </div>
                             <div className="text-sm text-gray-600">
@@ -563,32 +508,12 @@ function RegistrationWizard() {
                 <h2 className="text-3xl font-light tracking-tight text-black mb-4">
                   Data Diri & Akun
                 </h2>
-                <div className="w-16 h-px bg-red-600 mx-auto"></div>
+                <div className="w-16 h-px bg-blue-600 mx-auto"></div>
               </div>
 
-              {/* Account Type Toggle */}
               <div className="text-center">
-                <div className="inline-flex bg-gray-100 rounded-lg p-1">
-                  <button
-                    onClick={() => setHasAccount(false)}
-                    className={`px-6 py-2 text-sm font-light tracking-wide transition-colors ${
-                      !hasAccount
-                        ? 'bg-white text-black shadow-sm'
-                        : 'text-gray-600 hover:text-black'
-                    }`}
-                  >
-                    BUAT AKUN BARU
-                  </button>
-                  <button
-                    onClick={() => setHasAccount(true)}
-                    className={`px-6 py-2 text-sm font-light tracking-wide transition-colors ${
-                      hasAccount
-                        ? 'bg-white text-black shadow-sm'
-                        : 'text-gray-600 hover:text-black'
-                    }`}
-                  >
-                    SUDAH PUNYA AKUN
-                  </button>
+                <div className="text-gray-600 text-sm mb-6">
+                  Anda masuk sebagai: <span className="font-medium">{user?.email}</span>
                 </div>
               </div>
 
@@ -602,7 +527,7 @@ function RegistrationWizard() {
                       type="text"
                       value={formData.nik}
                       onChange={(e) => handleInputChange('nik', e.target.value)}
-                      className="w-full px-0 py-4 border-0 border-b border-gray-200 focus:border-red-600 focus:ring-0 bg-transparent text-lg font-light"
+                      className="w-full px-0 py-4 border-0 border-b border-gray-200 focus:border-blue-600 focus:ring-0 bg-transparent text-lg font-light"
                       placeholder="Nomor Induk Kependudukan"
                     />
                   </div>
@@ -614,7 +539,7 @@ function RegistrationWizard() {
                       type="text"
                       value={formData.nama}
                       onChange={(e) => handleInputChange('nama', e.target.value)}
-                      className="w-full px-0 py-4 border-0 border-b border-gray-200 focus:border-red-600 focus:ring-0 bg-transparent text-lg font-light"
+                      className="w-full px-0 py-4 border-0 border-b border-gray-200 focus:border-blue-600 focus:ring-0 bg-transparent text-lg font-light"
                       placeholder="Nama sesuai KTP"
                     />
                   </div>
@@ -626,7 +551,7 @@ function RegistrationWizard() {
                       type="tel"
                       value={formData.nomerHp}
                       onChange={(e) => handleInputChange('nomerHp', e.target.value)}
-                      className="w-full px-0 py-4 border-0 border-b border-gray-200 focus:border-red-600 focus:ring-0 bg-transparent text-lg font-light"
+                      className="w-full px-0 py-4 border-0 border-b border-gray-200 focus:border-blue-600 focus:ring-0 bg-transparent text-lg font-light"
                       placeholder="08xxxxxxxxxx"
                     />
                   </div>
@@ -638,7 +563,7 @@ function RegistrationWizard() {
                       type="text"
                       value={formData.kabKota}
                       onChange={(e) => handleInputChange('kabKota', e.target.value)}
-                      className="w-full px-0 py-4 border-0 border-b border-gray-200 focus:border-red-600 focus:ring-0 bg-transparent text-lg font-light"
+                      className="w-full px-0 py-4 border-0 border-b border-gray-200 focus:border-blue-600 focus:ring-0 bg-transparent text-lg font-light"
                       placeholder="Kabupaten/Kota"
                     />
                   </div>
@@ -646,63 +571,16 @@ function RegistrationWizard() {
                 <div className="space-y-6">
                   <div>
                     <label className="block text-sm font-light tracking-wide uppercase text-gray-600 mb-2">
-                      Email
+                      Alamat Lengkap
                     </label>
-                    <div className="relative">
-                      <Mail className="absolute left-0 top-4 w-5 h-5 text-gray-400" />
-                      <input
-                        type="email"
-                        value={formData.email}
-                        onChange={(e) => handleInputChange('email', e.target.value)}
-                        className="w-full pl-8 pr-0 py-4 border-0 border-b border-gray-200 focus:border-red-600 focus:ring-0 bg-transparent text-lg font-light"
-                        placeholder="email@example.com"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-light tracking-wide uppercase text-gray-600 mb-2">
-                      Password
-                    </label>
-                    <div className="relative">
-                      <Lock className="absolute left-0 top-4 w-5 h-5 text-gray-400" />
-                      <input
-                        type={showPassword ? 'text' : 'password'}
-                        value={formData.password}
-                        onChange={(e) => handleInputChange('password', e.target.value)}
-                        className="w-full pl-8 pr-12 py-4 border-0 border-b border-gray-200 focus:border-red-600 focus:ring-0 bg-transparent text-lg font-light"
-                        placeholder={hasAccount ? "Password akun Anda" : "Minimal 6 karakter"}
-                        minLength={6}
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-0 top-4 text-gray-400 hover:text-gray-600"
-                      >
-                        {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                      </button>
-                    </div>
-                  </div>
-                  {!hasAccount && (
-                    <div>
-                      <label className="block text-sm font-light tracking-wide uppercase text-gray-600 mb-2">
-                        Konfirmasi Password
-                      </label>
-                      <div className="relative">
-                        <Lock className="absolute left-0 top-4 w-5 h-5 text-gray-400" />
-                        <input
-                          type={showPassword ? 'text' : 'password'}
-                          value={formData.confirmPassword}
-                          onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
-                          className="w-full pl-8 pr-0 py-4 border-0 border-b border-gray-200 focus:border-red-600 focus:ring-0 bg-transparent text-lg font-light"
-                          placeholder="Ulangi password"
-                          minLength={6}
-                        />
-                      </div>
-                    </div>
-                  )}
-                  <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Alamat Lengkap</label>
-                    <AddressSelector onAddressChange={handleAddressChange} />
+                    <textarea
+                      value={formData.alamat}
+                      onChange={(e) => handleInputChange('alamat', e.target.value)}
+                      className="w-full px-0 py-4 border-0 border-b border-gray-200 focus:border-blue-600 focus:ring-0 bg-transparent text-lg font-light resize-none"
+                      rows={3}
+                      placeholder="Alamat lengkap sesuai KTP"
+                      required
+                    />
                   </div>
                 </div>
               </div>
@@ -716,7 +594,7 @@ function RegistrationWizard() {
                 <h2 className="text-3xl font-light tracking-tight text-black mb-4">
                   Pembayaran
                 </h2>
-                <div className="w-16 h-px bg-red-600 mx-auto"></div>
+                <div className="w-16 h-px bg-blue-600 mx-auto"></div>
               </div>
 
               {!showPayment ? (
@@ -737,22 +615,21 @@ function RegistrationWizard() {
                       <div className="border-t pt-4">
                         <div className="flex justify-between text-lg">
                           <span className="font-light">Total</span>
-                          <span className="font-light text-red-600">
+                          <span className="font-light text-blue-600">
                             {formatPrice(getTicketPrice())}
                           </span>
                         </div>
                       </div>
                     </div>
                   </div>
-                  
+
                   <button
                     onClick={handlePayment}
                     disabled={loading}
-                    className={`w-full py-4 text-lg font-light tracking-wide transition-colors flex items-center justify-center ${
-                      loading
+                    className={`w-full py-4 text-lg font-light tracking-wide transition-colors flex items-center justify-center ${loading
                         ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                        : 'bg-red-600 text-white hover:bg-red-700'
-                    }`}
+                        : 'bg-blue-600 text-white hover:bg-blue-700'
+                      }`}
                   >
                     <QrCode className="w-5 h-5 mr-2" />
                     {loading ? 'MEMPROSES...' : 'BAYAR SEKARANG'}
@@ -766,7 +643,7 @@ function RegistrationWizard() {
                     <p className="text-gray-600 mb-4">
                       Silakan selesaikan pembayaran di jendela yang terbuka
                     </p>
-                    <div className="text-2xl font-light text-red-600 mb-4">
+                    <div className="text-2xl font-light text-blue-600 mb-4">
                       {formatPrice(getTicketPrice())}
                     </div>
                     <div className="text-sm text-gray-500">
@@ -790,16 +667,15 @@ function RegistrationWizard() {
                   {currentStep === 1 ? 'KEMBALI KE BERANDA' : 'SEBELUMNYA'}
                 </span>
               </button>
-              
+
               {currentStep < 3 && (
                 <button
                   onClick={handleNext}
                   disabled={!isStepValid() || loading}
-                  className={`flex items-center px-8 py-3 text-sm font-light tracking-wide transition-colors ${
-                    isStepValid() && !loading
-                      ? 'bg-red-600 text-white hover:bg-red-700'
+                  className={`flex items-center px-8 py-3 text-sm font-light tracking-wide transition-colors ${isStepValid() && !loading
+                      ? 'bg-blue-600 text-white hover:bg-blue-700'
                       : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                  }`}
+                    }`}
                 >
                   <span>{loading ? 'MEMPROSES...' : 'SELANJUTNYA'}</span>
                   {!loading && <ArrowRight className="w-5 h-5 ml-2" />}
