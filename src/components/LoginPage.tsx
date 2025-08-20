@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
+import { supabase } from '../lib/supabase';
 
 function LoginPage() {
   const navigate = useNavigate();
   const { signIn, signUp } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
-  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -21,6 +22,19 @@ function LoginPage() {
     setError('');
   };
 
+  const checkProfileComplete = async (userId: string) => {
+    const { data, error } = await supabase
+      .from('users')
+      .select('*')
+      .eq('id', userId)
+      .single();
+
+    if (error || !data) return false;
+    
+    // Check if required profile fields are filled
+    return !!(data.nik && data.nama && data.nomer_hp && data.alamat);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -28,11 +42,19 @@ function LoginPage() {
 
     try {
       if (isLogin) {
-        const { error } = await signIn(formData.email, formData.password);
-        if (error) {
-          setError(error.message);
+        const { data: signInData, error: signInError } = await signIn(formData.email, formData.password);
+        if (signInError) {
+          setError(signInError.message);
+        } else if (signInData?.user?.id) {
+          // After successful login, check if profile is complete
+          const isProfileComplete = await checkProfileComplete(signInData.user.id);
+          if (isProfileComplete) {
+            navigate('/dashboard');
+          } else {
+            navigate('/profile', { state: { fromLogin: true } });
+          }
         } else {
-          navigate('/dashboard');
+          setError('Gagal masuk. Silakan coba lagi.');
         }
       } else {
         if (formData.password !== formData.confirmPassword) {
@@ -41,11 +63,12 @@ function LoginPage() {
           return;
         }
         
-        const { error } = await signUp(formData.email, formData.password);
-        if (error) {
-          setError(error.message);
+        const { error: signUpError } = await signUp(formData.email, formData.password);
+        if (signUpError) {
+          setError(signUpError.message);
         } else {
-          setError('Silakan cek email Anda untuk verifikasi akun');
+          // After signup, redirect to profile to complete registration
+          navigate('/profile', { state: { fromSignup: true } });
         }
       }
     } catch (err) {
@@ -172,10 +195,11 @@ function LoginPage() {
               {isLogin ? 'Belum punya akun?' : 'Sudah punya akun?'}
             </p>
             <button
+              type="button"
               onClick={() => {
                 setIsLogin(!isLogin);
                 setError('');
-                setFormData({ email: '', password: '', confirmPassword: '' });
+                setFormData({ email: formData.email, password: '', confirmPassword: '' });
               }}
               className="text-red-600 hover:text-red-700 font-light tracking-wide mt-2"
             >

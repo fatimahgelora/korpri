@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Check, Download, Calendar, MapPin, Clock, User, Mail, Phone, Home, LogOut, Plus, QrCode } from 'lucide-react';
+import { Check, Download, Calendar, MapPin, Clock, User, Mail, Phone, Home, LogOut, Plus, QrCode, User as UserIcon } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { supabase, Registration } from '../lib/supabase';
 import QRCodeGenerator from './QRCodeGenerator';
@@ -91,25 +91,30 @@ function Dashboard() {
         <div className="max-w-6xl mx-auto px-8 py-6">
           <div className="flex items-center justify-between">
             <div className="text-xl font-light tracking-wide text-black">
-              DASHBOARD PESERTA
+              DASHBOARD
             </div>
-            <div className="flex items-center space-x-6">
-              <div className="text-sm font-light text-gray-600">
-                {user?.email}
-              </div>
-              <button 
+            <div className="flex items-center space-x-4">
+              <button
+                onClick={() => navigate('/profile')}
+                className="flex items-center text-gray-600 hover:text-red-600 transition-colors"
+                title="Profil Saya"
+              >
+                <UserIcon className="w-5 h-5 mr-2" />
+                <span className="text-sm font-light">Profil</span>
+              </button>
+              <button
                 onClick={() => navigate('/')}
                 className="flex items-center text-gray-600 hover:text-black transition-colors"
               >
                 <Home className="w-5 h-5 mr-2" />
-                <span className="text-sm font-light tracking-wide">BERANDA</span>
+                <span className="text-sm font-light tracking-wide"></span>
               </button>
-              <button 
+              <button
                 onClick={handleSignOut}
                 className="flex items-center text-gray-600 hover:text-red-600 transition-colors"
               >
                 <LogOut className="w-5 h-5 mr-2" />
-                <span className="text-sm font-light tracking-wide">KELUAR</span>
+                <span className="text-sm font-light tracking-wide"></span>
               </button>
             </div>
           </div>
@@ -127,7 +132,7 @@ function Dashboard() {
               {paymentPending ? 'Registrasi Berhasil - Menunggu Pembayaran' : 'Registrasi Berhasil!'}
             </h1>
             <p className="text-lg font-light text-gray-700">
-              {paymentPending 
+              {paymentPending
                 ? 'Registrasi Anda berhasil dibuat. Silakan selesaikan pembayaran untuk mengaktifkan tiket.'
                 : 'Selamat! Anda telah berhasil mendaftar untuk KORPRI RUN 2025'
               }
@@ -152,13 +157,32 @@ function Dashboard() {
             <p className="text-gray-500 mb-8">
               Anda belum mendaftar untuk event KORPRI RUN 2025
             </p>
-            <button
-              onClick={() => navigate('/register')}
-              className="bg-red-600 text-white px-8 py-3 text-sm font-light tracking-wide hover:bg-red-700 transition-colors flex items-center mx-auto"
-            >
-              <Plus className="w-5 h-5 mr-2" />
-              DAFTAR SEKARANG
-            </button>
+            <div className="space-y-4">
+              <div className="flex justify-between items-center">
+                <div>
+                  <h2 className="text-2xl font-light tracking-wide text-gray-900">
+                    Dashboard
+                  </h2>
+                  <p className="text-gray-600">
+                    Lihat status pendaftaran dan tiket Anda
+                  </p>
+                </div>
+                <button
+                  onClick={() => navigate('/event/register')}
+                  className="flex items-center bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded transition-colors"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Daftar Event Baru
+                </button>
+              </div>
+              <button
+                onClick={() => navigate('/register')}
+                className="bg-red-600 text-white px-8 py-3 text-sm font-light tracking-wide hover:bg-red-700 transition-colors flex items-center mx-auto"
+              >
+                <Plus className="w-5 h-5 mr-2" />
+                Daftar Sekarang
+              </button>
+            </div>
           </div>
         )}
 
@@ -187,7 +211,7 @@ function Dashboard() {
                     <h2 className="text-2xl font-light tracking-tight text-black mb-8">
                       Informasi Tiket
                     </h2>
-                    
+
                     <div className="bg-red-600 text-white p-8 rounded-lg mb-6">
                       <div className="flex justify-between items-start mb-6">
                         <div>
@@ -199,7 +223,7 @@ function Dashboard() {
                           <div className="text-lg font-light">{registration.ticket_number}</div>
                         </div>
                       </div>
-                      
+
                       <div className="border-t border-white/20 pt-6">
                         <div className="grid grid-cols-2 gap-6">
                           <div>
@@ -218,8 +242,8 @@ function Dashboard() {
                       <Download className="w-5 h-5 mr-2" />
                       DOWNLOAD TIKET PDF
                     </button>
-                    
-                    <button 
+
+                    <button
                       onClick={() => {
                         setSelectedTicket(registration.ticket_number);
                         setShowQRModal(true);
@@ -229,8 +253,8 @@ function Dashboard() {
                       <QrCode className="w-5 h-5 mr-2" />
                       TAMPILKAN QR CODE
                     </button>
-                    
-                    <button 
+
+                    <button
                       onClick={() => {
                         setSelectedTicket(registration.ticket_number);
                         setShowQRModal(true);
@@ -247,7 +271,7 @@ function Dashboard() {
                     <h2 className="text-2xl font-light tracking-tight text-black mb-8">
                       Data Peserta
                     </h2>
-                    
+
                     <div className="grid grid-cols-2 gap-8">
                       <div className="space-y-6">
                         <div>
@@ -387,7 +411,7 @@ function Dashboard() {
                 ×
               </button>
             </div>
-            
+
             <div className="px-6 py-8 text-center">
               <QRCodeGenerator value={selectedTicket} size={250} className="mx-auto mb-4" />
               <div className="text-sm text-gray-600 mb-2">Nomor Tiket:</div>
@@ -396,7 +420,7 @@ function Dashboard() {
                 Tunjukkan QR code ini kepada petugas untuk penukaran nomor punggung
               </div>
             </div>
-            
+
             <div className="px-6 py-4 border-t border-gray-200 flex justify-end">
               <button
                 onClick={() => setShowQRModal(false)}
@@ -422,7 +446,7 @@ function Dashboard() {
                 ×
               </button>
             </div>
-            
+
             <div className="px-6 py-8 text-center">
               <QRCodeGenerator value={selectedTicket} size={250} className="mx-auto mb-4" />
               <div className="text-sm text-gray-600 mb-2">Nomor Tiket:</div>
@@ -431,7 +455,7 @@ function Dashboard() {
                 Tunjukkan QR code ini kepada petugas untuk penukaran nomor punggung
               </div>
             </div>
-            
+
             <div className="px-6 py-4 border-t border-gray-200 flex justify-end">
               <button
                 onClick={() => setShowQRModal(false)}
