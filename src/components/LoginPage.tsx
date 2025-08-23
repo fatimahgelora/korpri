@@ -181,8 +181,8 @@ function LoginPage() {
               type="submit"
               disabled={loading}
               className={`w-full py-4 text-lg font-light tracking-wide transition-colors ${loading
-                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                  : 'bg-blue-600 text-white hover:bg-blue-700'
+                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                : 'bg-blue-600 text-white hover:bg-blue-700'
                 }`}
             >
               {loading ? 'MEMPROSES...' : (isLogin ? 'MASUK' : 'DAFTAR')}

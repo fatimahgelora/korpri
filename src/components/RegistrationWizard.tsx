@@ -555,33 +555,20 @@ function RegistrationWizard() {
                       placeholder="08xxxxxxxxxx"
                     />
                   </div>
-                  <div>
-                    <label className="block text-sm font-light tracking-wide uppercase text-gray-600 mb-2">
-                      Kabupaten/Kota
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.kabKota}
-                      onChange={(e) => handleInputChange('kabKota', e.target.value)}
-                      className="w-full px-0 py-4 border-0 border-b border-gray-200 focus:border-blue-600 focus:ring-0 bg-transparent text-lg font-light"
-                      placeholder="Kabupaten/Kota"
-                    />
-                  </div>
+                  <AddressSelector
+                    onAddressChange={(address) => {
+                      setFormData(prev => ({
+                        ...prev,
+                        province: address.province,
+                        regency: address.regency,
+                        district: address.district,
+                        village: address.village,
+                        alamat: address.fullAddress
+                      }));
+                    }}
+                  />
                 </div>
                 <div className="space-y-6">
-                  <div>
-                    <label className="block text-sm font-light tracking-wide uppercase text-gray-600 mb-2">
-                      Alamat Lengkap
-                    </label>
-                    <textarea
-                      value={formData.alamat}
-                      onChange={(e) => handleInputChange('alamat', e.target.value)}
-                      className="w-full px-0 py-4 border-0 border-b border-gray-200 focus:border-blue-600 focus:ring-0 bg-transparent text-lg font-light resize-none"
-                      rows={3}
-                      placeholder="Alamat lengkap sesuai KTP"
-                      required
-                    />
-                  </div>
                 </div>
               </div>
             </div>
