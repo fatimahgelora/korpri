@@ -1,12 +1,12 @@
-import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { createClient } from 'npm:@supabase/supabase-js@2'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS'
 }
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
@@ -25,18 +25,13 @@ serve(async (req) => {
       order_id,
       transaction_status,
       fraud_status,
-      payment_type,
       gross_amount,
-      transaction_time,
       signature_key
     } = body
 
-    // Verify signature (optional but recommended)
-    // const serverKey = Deno.env.get('MIDTRANS_SERVER_KEY')
-    // const expectedSignature = await crypto.subtle.digest(
-    //   'SHA-512',
-    //   new TextEncoder().encode(`${order_id}${status_code}${gross_amount}${serverKey}`)
-    // )
+    // TODO: Verify signature for security
+    // const serverKey = 'SB-Mid-server-DP1m6khrSJWV4yaH0Gv_U9_b'
+    // Implement signature verification here
 
     let paymentStatus = 'pending'
     

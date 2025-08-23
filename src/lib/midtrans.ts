@@ -4,7 +4,8 @@ export const MIDTRANS_CONFIG = {
   serverKey: 'SB-Mid-server-DP1m6khrSJWV4yaH0Gv_U9_b',
   merchantId: 'G852074646',
   isProduction: false, // Set to true for production
-  apiUrl: 'https://app.sandbox.midtrans.com/snap/v1/transactions'
+  apiUrl: 'https://app.sandbox.midtrans.com/snap/v1/transactions',
+  webhookUrl: 'https://vzgnjljgkmgibleexpio.supabase.co/functions/v1/midtrans-webhook'
 };
 
 export interface MidtransTransaction {
